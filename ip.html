@@ -1,0 +1,97 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #222;
+            max-width: 40rem;
+            padding: 2rem;
+            margin: auto;
+            background: #fafafa;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        a {
+            color: #2ECC40;
+        }
+
+        h1,
+        h2 {
+            color: #111;
+            text-align: center;
+        }
+
+        div {
+            border-radius: 20px;
+            border: 3px blue solid;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Local IP</h2>
+    <h1>
+        <div onclick="return ClipBoard(this)" id="lip"></div>
+    </h1>
+    <h2>External IP</h2>
+    <h1>
+        <div onclick="return ClipBoard(this)" id="rip"></div>
+    </h1>
+    <TEXTAREA ID="holdtext" STYLE="display:none;">
+</TEXTAREA>
+    <script>
+        function ClipBoard(o) {
+            if (typeof navigator.share != "undefined") {
+                navigator.share({
+                    text: o.innerText
+                });
+            } else {
+                navigator.clipboard.writeText(o.innerText);
+                var oldtext = o.innerText;
+                o.innerText = "Copied to clipboard";
+                setTimeout(() => o.innerText = oldtext, 800);
+            }
+            return false;
+        }
+        (c => {
+            RTCPeerConnection = window.RTCPeerConnection ||
+                window.mozRTCPeerConnection ||
+                window.webkitRTCPeerConnection;
+            var locip, remip;
+
+            var pc = new RTCPeerConnection({
+                iceServers: [{
+                    urls: 'stun:stun.l.google.com:19302'
+                }]
+            }, {});
+            pc.onicecandidate = function(ice) {
+                //skip non-candidate events
+                if (ice.candidate) {
+                    ip = ice.candidate.candidate.split(" ")[4];
+                    ice.candidate.candidate.split(" ")[7] == "host" ? locip = ip : remip = ip;
+                } else {
+                    pc.close();
+                    c(locip, remip)
+                };
+            };
+            pc.createDataChannel("");
+
+            pc.createOffer(function(result) {
+                //trigger the stun server request
+                pc.setLocalDescription(result, function() {}, function() {});
+            }, function() {});
+        })(
+            function(locip, remip) {
+                document.getElementById("lip").innerText = locip;
+                document.getElementById("rip").innerText = remip;
+            }
+        )
+    </script>
+</body>
+
+</html>
