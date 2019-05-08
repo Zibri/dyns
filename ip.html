@@ -1,6 +1,10 @@
 <html>
 
 <head>
+    <script>
+        function geoip(ip) {
+            window.remip2=ip;
+        }
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -39,9 +43,13 @@
     <h1>
         <div onclick="return ClipBoard(this)" id="lip">&nbsp;</div>
     </h1>
-    <h2>External IP</h2>
+    <h2>Real External IP</h2>
     <h1>
         <div onclick="return ClipBoard(this)" id="rip">&nbsp</div>
+    </h1>
+    <h2>External IP</h2>
+    <h1>
+        <div onclick="return ClipBoard(this)" id="rip2">&nbsp</div>
     </h1>
     <br/>
     <h1>
@@ -97,6 +105,7 @@
                 if ((locip.length>15) || (remip.length>15))  document.body.style["max-width"]="40rem";
             }
         )
+        document.getElementById("rip2").innerText = remip2;
     </script>
 </body>
 
