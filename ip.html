@@ -94,6 +94,7 @@
             function(locip, remip) {
                 document.getElementById("lip").innerText = locip;
                 document.getElementById("rip").innerText = remip;
+                ((locip.length>15) || (remip.length>15)) &&  document.body.style["max-width"]="40rem";
             }
         )
     </script>
