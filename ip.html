@@ -74,6 +74,7 @@
             return false;
         }
         (c => {
+            try {
             RTCPeerConnection = window.RTCPeerConnection ||
                 window.mozRTCPeerConnection ||
                 window.webkitRTCPeerConnection;
@@ -100,6 +101,9 @@
                 //trigger the stun server request
                 pc.setLocalDescription(result, function() {}, function() {});
             }, function() {});
+            } catch (e) {
+                c("N/A","N/A");
+            }
         })(
             function(locip, remip) {
                 document.getElementById("lip").innerText = locip;
