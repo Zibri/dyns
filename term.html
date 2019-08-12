@@ -26,6 +26,7 @@
 <div id="terminal"></div>
 <script>
 (function () {
+    Terminal.applyAddon(fit);
     var term = new Terminal();
     term.open(document.getElementById('terminal'));
     window.term=term;
