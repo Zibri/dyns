@@ -18,6 +18,9 @@
 
 <link rel="stylesheet" href="https://unpkg.com/xterm/dist/xterm.css" />
 <script src="https://unpkg.com/xterm/dist/xterm.js"></script>
+<script src="https://unpkg.com/xterm/dist/addons/attach/attach.js"></script>
+<script src="https://unpkg.com/xterm/dist/addons/fit/fit.js"></script>
+<script src="https://unpkg.com/xterm/dist/addons/fullscreen/fullscreen.js"></script>
 </head>
 <body>
 <div id="terminal"></div>
@@ -25,7 +28,7 @@
 (function () {
     var term = new Terminal();
     term.open(document.getElementById('terminal'));
-
+    window.term=term;
     function runFakeTerminal() {
         if (term._initialized) {
             return;
