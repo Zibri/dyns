@@ -25,7 +25,7 @@
                     console.log("quiet failed to initialize: " + reason);
                 }
                 function onDOMLoad() {
-                    Quiet.addReadyCallback(onQuietReady, onQuietFail);
+                    Quiet.addReadyCallback(onQuietReady, onReceiveFail);
                 }
                 document.addEventListener("DOMContentLoaded", onDOMLoad);
             }
