@@ -43,7 +43,7 @@ function success(pos) {
   butt=document.createElement("button");
   butt.innerText="Send position";
   butt.id="pos";
-  butt.onclick=(()=>sender.play(lat.toString().replace(".","*")+"#"+lng.toString().replace(".","*")+"#"+acc+"#")).bind(this);
+  butt.onclick=()=>sender.play(lat.toString().replace(".","*")+"#"+lng.toString().replace(".","*")+"#"+acc+"#");
 document.getElementById('pos').replaceWith(butt);
 }
 
