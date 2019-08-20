@@ -21,7 +21,7 @@
     "resampler": {
       "delay": 13,
       "bandwidth": 0.45,
-      "attenuation": 60,
+      "attenuation": 20,
       "filter_bank_size": 64
     }
   },
