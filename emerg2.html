@@ -15,6 +15,9 @@ var TextTransmitter = (function() {
     function onQuietReady() {
         transmit = Quiet.transmitter({profile: 'audible', onFinish: onTransmitFinish});
     };
+    function onQuietFail(reason) {
+        console.log("quiet failed to initialize: " + reason);
+    };
     function onDOMLoad() {
         Quiet.addReadyCallback(onQuietReady, onQuietFail);
     };
