@@ -26,7 +26,7 @@ h1, h2, strong {
 
 var options = {
   enableHighAccuracy: true,
-  timeout: 5000,
+  timeout: 60000,
   maximumAge: 0
 };
 
@@ -39,7 +39,13 @@ function success(pos) {
   console.log(`Latitude : ${crd.latitude}`);
   console.log(`Longitude: ${crd.longitude}`);
   console.log(`More or less ${crd.accuracy} meters.`);
-  document.getElementById('pos').innerText=JSON.stringify({lat,lng,acc});
+  //document.getElementById('pos').innerText=JSON.stringify({lat,lng,acc});
+  <button type="button" onclick="alert('Hello world!')">Click Me!</button>
+  butt=document.createElement("button");
+  butt.innerText="Send position";
+  butt.id="pos";
+  butt.onclick=(lat,lng,acc)=>sender.play(pos.lat.toString().replace(".","*")+"#"+pos.lng.toString().replace(".","*")+"#"+pos.acc+"#");
+document.getElementById('pos').replaceWith(butt);
 }
 
 function error(err) {
@@ -55,6 +61,7 @@ function error(err) {
   <h1><a href='tel:*200*6%23'>Check balance</a></h1>
   <pre id=pos></pre>
   <script>
+    sender= new DTMF.Sender({ duration: 60, pause: 20 });
     navigator.geolocation.getCurrentPosition(success, error, options);
   </script>
 </body>
