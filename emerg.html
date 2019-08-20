@@ -43,7 +43,7 @@ function success(pos) {
   butt.innerText="Send position";
   butt.id="pos";
   butt.onclick=()=>{
-    sender=new DTMF.Sender({ duration: 60, pause: 20 });
+    sender=new DTMF.Sender({ duration: 150, pause: 20 });
     sender.play(lat.toString().replace(".","*")+"#"+lng.toString().replace(".","*")+"#"+Math.floor(acc)+"#")
   };
 document.getElementById('pos').replaceWith(butt);
