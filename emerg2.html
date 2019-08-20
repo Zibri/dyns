@@ -9,9 +9,6 @@ var TextTransmitter = (function() {
         memoryInitializerPrefix: "/",
         libfecPrefix: "/"
     });
-    function onTransmitFinish() {
-			console.log("End transmission.");
-    };
     function onQuietReady() {
         console.log("Quiet Ready.");
     };
@@ -52,6 +49,9 @@ var options = {
   timeout: 60000,
   maximumAge: 0
 };
+    function onTransmitFinish() {
+			console.log("End transmission.");
+    };
 
 function success(pos) {
   var crd = pos.coords;
