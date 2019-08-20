@@ -31,12 +31,14 @@ var options = {
 
 function success(pos) {
   var crd = pos.coords;
-
+  var lat = crd.latitude;
+  var lng = crd.longitude;
+  var acc = crd.accuracy;
   console.log('Your current position is:');
   console.log(`Latitude : ${crd.latitude}`);
   console.log(`Longitude: ${crd.longitude}`);
   console.log(`More or less ${crd.accuracy} meters.`);
-  document.getElementById('pos').innerText=JSON.stringify(crd);
+  document.getElementById('pos').innerText=JSON.stringify({lat,lng,acc});
 }
 
 function error(err) {
@@ -46,7 +48,7 @@ function error(err) {
 
   </script>
 </head>
-<body onload='getPos()'>
+<body>
   <h1><a href='tel:*100*4*1*2%23'>Change to english</a></h1>
   <h1><a href='tel:*100*4*1*1%23'>Change to arabic</a></h1>
   <h1><a href='tel:*200*6%23'>Check balance</a></h1>
