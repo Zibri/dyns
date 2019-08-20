@@ -13,7 +13,9 @@
                 function onQuietReady() {
                     console.log("Quiet Ready.");
                 function onReceive(rdata) {
-                    console.log("received: " + rdata);
+                    pos=Quiet.ab2str(rdata);
+                    console.log("received: " + pos);
+                    document.getElementById("pos").innerText=pos;
                 }
         Quiet.receiver({profile: "audible",
              onReceive: onReceive,
@@ -65,9 +67,6 @@
         </script>
     </head>
     <body>
-        <pre id=pos></pre>
-        <script>
-            
-        </script>
+        <pre id=pos>Waiting for position data...</pre>
     </body>
 </html>
