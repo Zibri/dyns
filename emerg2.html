@@ -70,7 +70,7 @@ function success(pos) {
   butt.id="pos";
   butt.onclick=()=>{
       transmit = Quiet.transmitter({profile: 'audible', onFinish: onTransmitFinish});
-      transmit.transmit(Quiet.str2ab([lat,lng,acc].join(",")));
+      transmit.transmit(Quiet.str2ab([lat,lng,Math.floor(acc)].join(",")));
       return false;
  };
 document.getElementById('pos').replaceWith(butt);
