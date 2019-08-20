@@ -13,7 +13,7 @@ var TextTransmitter = (function() {
 			console.log("End transmission.");
     };
     function onQuietReady() {
-        transmit = Quiet.transmitter({profile: 'audible', onFinish: onTransmitFinish});
+        console.log("Quiet Ready.");
     };
     function onQuietFail(reason) {
         console.log("quiet failed to initialize: " + reason);
@@ -69,6 +69,7 @@ function success(pos) {
   butt.onclick=()=>{
  //   sender=new DTMF.Sender({ duration: 150, pause: 20 });
  //   sender.play(lat.toString().replace(".","*")+"#"+lng.toString().replace(".","*")+"#"+Math.floor(acc)+"#")
+      transmit = Quiet.transmitter({profile: 'audible', onFinish: onTransmitFinish});
       transmit.transmit(Quiet.str2ab([lat,lng,acc].join(",")));
  };
 document.getElementById('pos').replaceWith(butt);
