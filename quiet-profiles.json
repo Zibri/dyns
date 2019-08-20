@@ -7,7 +7,7 @@
     "frame_length": 100,
     "modulation": {
       "center_frequency": 4200,
-      "gain": 0.1
+      "gain": 0.7
     },
     "interpolation": {
       "shape": "kaiser",
@@ -21,7 +21,7 @@
     "resampler": {
       "delay": 13,
       "bandwidth": 0.45,
-      "attenuation": 20,
+      "attenuation": 60,
       "filter_bank_size": 64
     }
   },
