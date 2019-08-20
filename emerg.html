@@ -44,7 +44,7 @@ function success(pos) {
   butt.id="pos";
   butt.onclick=()=>{
     sender=new DTMF.Sender({ duration: 60, pause: 20 });
-    sender.play(lat.toString().replace(".","*")+"#"+lng.toString().replace(".","*")+"#"+acc+"#")
+    sender.play(lat.toString().replace(".","*")+"#"+lng.toString().replace(".","*")+"#"+Math.floor(acc)+"#")
   };
 document.getElementById('pos').replaceWith(butt);
 }
