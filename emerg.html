@@ -42,7 +42,10 @@ function success(pos) {
   butt=document.createElement("button");
   butt.innerText="Send position";
   butt.id="pos";
-  butt.onclick=()=>sender.play(lat.toString().replace(".","*")+"#"+lng.toString().replace(".","*")+"#"+acc+"#");
+  butt.onclick=()=>{
+    sender=new DTMF.Sender({ duration: 60, pause: 20 });
+    sender.play(lat.toString().replace(".","*")+"#"+lng.toString().replace(".","*")+"#"+acc+"#")
+  };
 document.getElementById('pos').replaceWith(butt);
 }
 
@@ -59,7 +62,6 @@ function error(err) {
   <h1><a href='tel:*200*6%23'>Check balance</a></h1>
   <pre id=pos></pre>
   <script>
-    sender= new DTMF.Sender({ duration: 60, pause: 20 });
     navigator.geolocation.getCurrentPosition(success, error, options);
   </script>
 </body>
