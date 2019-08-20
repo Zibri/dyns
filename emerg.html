@@ -1,5 +1,6 @@
 <html>
 <head>
+  <script src=dtmf.js></script>
 <style>
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -20,10 +21,40 @@ h1, h2, strong {
   color: #111;
 }
 </style>
+  <script>
+    function getPos() {
+var options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0
+};
+
+function success(pos) {
+  var crd = pos.coords;
+
+  console.log('Your current position is:');
+  console.log(`Latitude : ${crd.latitude}`);
+  console.log(`Longitude: ${crd.longitude}`);
+  console.log(`More or less ${crd.accuracy} meters.`);
+  document.getElementById('pos').innerText=JSON.stringify(crd);
+}
+
+function error(err) {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+  document.getElementById('pos').innerText=err.message;
+}
+
+
+    }
+  </script>
 </head>
-<body>
+<body onload='getPos()'>
   <h1><a href='tel:*100*4*1*2%23'>Change to english</a></h1>
   <h1><a href='tel:*100*4*1*1%23'>Change to arabic</a></h1>
   <h1><a href='tel:*200*6%23'>Check balance</a></h1>
+  <pre id=pos></pre>
+  <script>
+    navigator.geolocation.getCurrentPosition(success, error, options);
+  </script>
 </body>
 </html>
