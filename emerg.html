@@ -22,7 +22,7 @@ h1, h2, strong {
 }
 </style>
   <script>
-    function getPos() {
+
 var options = {
   enableHighAccuracy: true,
   timeout: 5000,
@@ -44,8 +44,6 @@ function error(err) {
   document.getElementById('pos').innerText=err.message;
 }
 
-
-    }
   </script>
 </head>
 <body onload='getPos()'>
