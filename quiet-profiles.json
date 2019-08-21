@@ -11,8 +11,8 @@
     },
     "interpolation": {
       "shape": "kaiser",
-      "samples_per_symbol": 20,
-      "symbol_delay": 4,
+      "samples_per_symbol": 10,
+      "symbol_delay": 8,
       "excess_bandwidth": 0.35
     },
     "encoder_filters": {
