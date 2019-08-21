@@ -4,16 +4,16 @@
     "checksum_scheme": "crc32",
     "inner_fec_scheme": "v27",
     "outer_fec_scheme": "none",
-    "frame_length": 100,
+    "frame_length": 140,
     "modulation": {
-      "center_frequency": 4200,
+      "center_frequency": 5200,
       "gain": 0.5
     },
     "interpolation": {
       "shape": "kaiser",
-      "samples_per_symbol": 10,
-      "symbol_delay": 4,
-      "excess_bandwidth": 0.35
+      "samples_per_symbol": 14,
+      "symbol_delay": 5,
+      "excess_bandwidth": 0.45
     },
     "encoder_filters": {
       "dc_filter_alpha": 0.01
