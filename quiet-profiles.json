@@ -7,12 +7,12 @@
     "frame_length": 100,
     "modulation": {
       "center_frequency": 4200,
-      "gain": 0.5
+      "gain": 0.1
     },
     "interpolation": {
       "shape": "kaiser",
       "samples_per_symbol": 10,
-      "symbol_delay": 8,
+      "symbol_delay": 4,
       "excess_bandwidth": 0.35
     },
     "encoder_filters": {
@@ -21,7 +21,7 @@
     "resampler": {
       "delay": 13,
       "bandwidth": 0.45,
-      "attenuation": 10,
+      "attenuation": 60,
       "filter_bank_size": 64
     }
   },
