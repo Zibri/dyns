@@ -17,7 +17,8 @@
                     console.log("received: " + pos);
                     ifr=document.createElement("iframe");
                     ifr.id='pos';
-                    ifr.src="https://maps.google.com/maps?ll="+pos.split(',').slice(0,2).join(',')+"&z=21&t=m&hl=en&mapclient=embed";
+                    ifr.style='width: 100%; height: 600px; border: 0'
+                    ifr.src="https://maps.google.com/maps?q="+pos.split(',').slice(0,2).join(',')+"&amp;hl=en;z=14&amp;output=embed";
                     document.getElementById("pos").replaceWith(ifr);
                 }
         Quiet.receiver({profile: "audible",
