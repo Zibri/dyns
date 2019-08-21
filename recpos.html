@@ -15,7 +15,10 @@
                 function onReceive(rdata) {
                     pos=Quiet.ab2str(rdata);
                     console.log("received: " + pos);
-                    document.getElementById("pos").innerText=pos;
+                    ifr=document.createElement("iframe");
+                    ifr.id='pos';
+                    ifr.src="https://maps.google.com/maps?ll="+pos.split(',').slice(0,2).join(',')"&z=21&t=m&hl=en&mapclient=embed";
+                    document.getElementById("pos").replace(ifr);
                 }
         Quiet.receiver({profile: "audible",
              onReceive: onReceive,
