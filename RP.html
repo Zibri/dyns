@@ -102,9 +102,9 @@ gD = ()=>{
     }
 
     function checkEnd() {
-        if ((sc > 50) && (msg != "")) {
+        if ((sc > 100) && (msg != "")) {
         	console.log("Received:",msg);
-        	if (msg.split('').reduce((acc,c)=>(acc^c.charCodeAt(0))&7,0)==0) {
+        	if (msg.split('').reduce((acc,c)=>(acc ^ c.charCodeAt(0)) & 7, 0)==0) {
         		msg=msg.slice(0, -1);
           ifr=document.createElement("iframe");
           ifr.id='lip';
