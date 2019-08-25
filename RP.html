@@ -1,0 +1,178 @@
+<html>
+<head>
+    <meta property="og:title" content="IP">
+    <meta property="og:description" content="Receive Position">
+    <meta property="og:image" content="RP.png">
+    <meta property="og:image:width" content="603">
+    <meta property="og:image:height content="310">
+    <script>
+
+gD = ()=>{
+    symbols = "0123456789,.NSW";
+    m = {};
+    c = 0;
+    for (x = 1; x < 7; x++) {
+        for (y = x + 1; y < 7; y++) {
+            m[x * 10 + y] = symbols[c++]
+        }
+    }
+
+    let audioContext;
+    if ('webkitAudioContext'in window) {
+        audioContext = new webkitAudioContext();
+    } else {
+        audioContext = new AudioContext();
+    }
+
+    //    frequencies=[1000,1256,1512,1768,2024,2280,2536,2792,3048,3304,3560];
+    frequencies = [1000, 1512, 2024, 2536, 3048, 3560];
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.0;
+    analyser.minDecibels = -60;
+    analyser.maxDecibels = -20;
+    navigator.mediaDevices.getUserMedia({
+        audio: true
+    }).then(stream=>{
+        var microphone = audioContext.createMediaStreamSource(stream);
+        microphone.connect(analyser);
+    }
+    ).catch(err=>{
+        alert("Microphone is required.");
+    }
+    );
+
+    buffer = new Uint8Array(analyser.frequencyBinCount);
+    const frequencyBinValue = (f)=>{
+        const hzPerBin = (audioContext.sampleRate) / (2 * analyser.frequencyBinCount);
+        const index = parseInt((f + hzPerBin / 2) / hzPerBin);
+        return buffer[index];
+    }
+
+    isActive = (value,threshold)=>{
+        return value > threshold;
+    }
+
+/*
+    getState = ()=>{
+        return frequencies.map(frequencyBinValue).reduce((acc,val,idx)=>{
+            if (isActive(val, 200)) {
+                acc = idx + 1;
+            }
+            return acc;
+        }
+        , 0);
+    }
+*/
+    // =========================================================
+
+    window.getData = ()=>{
+        analyser.getByteFrequencyData(buffer);
+        state = frequencies.map(frequencyBinValue).reduce((acc,val,idx)=>{
+            if (val > 200) {
+                acc = acc * 10 + (idx + 1);
+            }
+            return acc;
+        }
+        , 0);
+//        if ((state > 9) && (state < 100)) {
+        if ((Math.log10(state)>>0)==1) {
+            if ((state != old) && (rc > 4)) {
+                //console.log(rc, state, "data:", m[state]);
+                msg += m[state];
+                old = state;
+                rc = sc = 0;
+            } else {
+                rc += 1;
+            }
+        } else {
+            if (state == 0)
+                sc += 1;
+        }
+    }
+
+    window.test = ()=>{
+        analyser.getByteFrequencyData(buffer);
+        m = buffer.reduce((iMax,x,i,arr)=>x > arr[iMax] ? i : iMax, 0);
+        fbin = 44100 / 1024 * (m + 0.5);
+        if (buffer[m] >= 230) {
+            console.log(m, fbin, buffer[m]);
+            window.freqs.push(fbin)
+        }
+    }
+
+    function checkEnd() {
+        if ((sc > 50) && (msg != "")) {
+        	console.log("Received:",msg);
+        	if (msg.split('').reduce((acc,c)=>(acc^c.charCodeAt(0))&7,0)==0) {
+        		msg=msg.slice(0, -1);
+          ifr=document.createElement("iframe");
+          ifr.id='lip';
+          ifr.style='width: 100%; height: 600px; border: 0';
+          ifr.src="https://maps.google.com/maps?q="+msg+"&hl=en;z=14&output=embed";
+          document.getElementById("lip").replaceWith(ifr);
+          console.log("End receive.");
+          clearInterval(rint);
+          clearInterval(sint);
+        } else {
+        	document.getElementById("lip").innerText="Receive error!";
+        	setTimeout(()=>{document.getElementById("lip").innerText="Receiving..."},800);
+        msg = "";
+        old = 0;
+        rc = 0;
+        sc = 0;
+
+        }
+        }
+    }
+    
+    window.receive = ()=>{
+    	  document.getElementById("lip").onclick=null;
+    	  document.getElementById("lip").innerText="Receiving...";
+        msg = "";
+        old = 0;
+        rc = 0;
+        sc = 0;
+        window.rint = setInterval(getData, 2);
+        window.sint = setInterval(checkEnd, 100);
+    }
+    window.receive();
+    return false;
+}
+
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.8;
+            color: #222;
+            max-width: 20rem;
+            padding: 2rem;
+            margin: auto;
+            background: #fafafa;
+        }
+        img {
+            max-width: 100%;
+        }
+        a {
+            color: #2ECC40;
+        }
+        h1,
+        h2 {
+            color: #111;
+            text-align: center;
+        }
+        div {
+            border-radius: 20px;
+            border: 3px blue solid;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>WebAudio<br/>Position Data Receiver</h2>
+    <h2>
+        <div onclick="return gD()" id="lip">Receive position data</div>
+    </h2>
+</body>
+</html>
