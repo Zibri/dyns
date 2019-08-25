@@ -23,9 +23,11 @@
         console.log(`More or less ${crd.accuracy} meters.`);
         msg = Math.floor(lat * 1000000) / 1000000 + "," + Math.floor(lng * 1000000) / 1000000;
         msg = msg + msg.split('').reduce((acc,c)=>(acc ^ c.charCodeAt(0)) & 7, 0);
+        speed=document.getElementById("slow").checked?5:10;
+        localStorage.slow=document.getElementById("slow").checked;
         sd = ()=>{
             console.log(`Sending: ${msg}`);
-            sendData(msg, 10, false, document.getElementById("save").checked);
+            sendData(msg, speed, false, document.getElementById("save").checked);
         }
         //  console.log(`Sending: ${msg}`);
         document.getElementById('lip').innerText = "Sending position";
@@ -224,6 +226,10 @@ console.log(buffer2)
 <label class="switch">
   <input type="checkbox" id="save" name="save" unchecked >&nbsp;&nbsp;Save audio</input>
 </label>   
+<br/>
+<label class="switch">
+  <input type="checkbox" id="slow" name="slow" unchecked >&nbsp;&nbsp;Half speed</input>
+</label>   
      </h2>
   <script>
     var options = {
@@ -236,6 +242,7 @@ console.log(buffer2)
         document.getElementById('lip').innerText = "Getting position...";
         navigator.geolocation.getCurrentPosition(success, error, options);
     }
+    document.getElementById("slow").checked=localStorage.slow;
   </script>
 
 </body>
