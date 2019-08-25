@@ -1,0 +1,242 @@
+<html>
+<head>
+    <meta property="og:title" content="IP">
+    <meta property="og:description" content="Receive Position">
+    <meta property="og:image" content="RP.png">
+    <meta property="og:image:width" content="603">
+    <meta property="og:image:height content="310">
+    <script>
+
+    function error(err) {
+        console.warn(`ERROR(${err.code}): ${err.message}`);
+        document.getElementById('lip').innerText = err.message;
+    }
+
+    function success(pos) {
+        var crd = pos.coords;
+        var lat = crd.latitude;
+        var lng = crd.longitude;
+        var acc = crd.accuracy;
+        console.log('Your current position is:');
+        console.log(`Latitude : ${crd.latitude}`);
+        console.log(`Longitude: ${crd.longitude}`);
+        console.log(`More or less ${crd.accuracy} meters.`);
+        msg = Math.floor(lat * 1000000) / 1000000 + "," + Math.floor(lng * 1000000) / 1000000;
+        msg = msg + msg.split('').reduce((acc,c)=>(acc ^ c.charCodeAt(0)) & 7, 0);
+        sd = ()=>{
+            console.log(`Sending: ${msg}`);
+            sendData(msg, 10, false, document.getElementById("save").checked);
+        }
+        //  console.log(`Sending: ${msg}`);
+        document.getElementById('lip').innerText = "Sending position";
+        //  document.getElementById('lip').onclick=sd;
+        sd();
+    }
+
+    sendData = function(data, baud, pause=false, save=false) {
+        function download(url, filename) {
+            filename = (filename || url.split("/").slice(-1)[0]) || "data_" + new Date().getTime().toString(36);
+            var a = document.createElement("a");
+            a.href = url;
+            a.setAttribute("download", filename);
+            a.click();
+        }
+        var AudioContext = window.AudioContext || window.webkitAudioContext;
+        var context = new AudioContext();
+        var sampleRate = 44100;
+        var baud = baud * 2;
+        var samplesPerByte = parseInt(sampleRate / baud, 10);
+        var bufferSize = samplesPerByte * data.length * (pause ? 2 : 1) + samplesPerByte;
+        var buffer1 = context.createBuffer(1, bufferSize, sampleRate);
+        var buffer2 = context.createBuffer(1, bufferSize, sampleRate);
+        m = [];
+        for (x = 0; x < 6; x++) {
+            for (y = x + 1; y < 6; y++) {
+                z = (x - 2.5) / 2.5;
+                q = (y - 2.5) / 2.5;
+                m.push([z, q])
+            }
+        }
+        symbols = "0123456789,.NSW";
+        //    data = "338.9536946N8528.2504E";
+        var b1 = buffer1.getChannelData(0);
+        var b2 = buffer2.getChannelData(0);
+        var offset = 0;
+
+        data.split("").forEach((c)=>{
+            console.log(m[symbols.indexOf(c)]);
+            si = symbols.indexOf(c);
+            //if (si==-1) bm=-Infinity else bm=m[si];
+            bm = (si == -1) && [-Infinity, -Infinity] || m[si];
+
+            for (var i = 0; i < samplesPerByte; i++) {
+                b1[offset] = bm[0];
+                b2[offset++] = bm[1];
+            }
+            if (pause) {
+                for (var i = 0; i < samplesPerByte; i++) {
+                    b1[offset] = -Infinity;
+                    // silence
+                    b2[offset++] = -Infinity;
+                    // silence
+                }
+            }
+
+        }
+        )
+
+        for (var i = 0; i < samplesPerByte; i++) {
+            b1[offset] = -Infinity;
+            // silence
+            b2[offset++] = -Infinity;
+            // silence
+        }
+
+        var modGain1 = context.createGain();
+        modGain1.gain.value = 1280;
+        var osc1 = context.createOscillator();
+        osc1.frequency.value = 2280;
+        var source1 = context.createBufferSource();
+        source1.buffer = buffer1;
+        source1.connect(modGain1);
+        modGain1.connect(osc1.frequency);
+
+        var modGain2 = context.createGain();
+        modGain2.gain.value = 1280;
+        var osc2 = context.createOscillator();
+        osc2.frequency.value = 2280;
+        var source2 = context.createBufferSource();
+        source2.buffer = buffer2;
+        source2.connect(modGain2);
+        modGain2.connect(osc2.frequency);
+
+        if (save) {
+            var dest = context.createMediaStreamDestination();
+            osc1.connect(dest);
+            osc2.connect(dest);
+            mediaRecorder = new MediaRecorder(dest.stream);
+            chunks = [];
+
+            mediaRecorder.ondataavailable = function(evt) {
+                chunks.push(evt.data);
+            }
+
+            mediaRecorder.onstop = function(evt) {
+                var blob = new Blob(chunks,{
+                    'type': 'audio/ogg; codecs=opus'
+                });
+                download(URL.createObjectURL(blob));
+
+                //    document.querySelector("audio").style = "display: block;";
+                //    document.querySelector("audio").src = URL.createObjectURL(blob);
+            }
+        }
+        // ANALYSER CODE
+        /*
+    analyser = context.createAnalyser();
+    analyser.fftSize = 1024;
+    analyser.smoothingTimeConstant = 0.0;
+    analyser.minDecibels = -60;
+    analyser.maxDecibels = -20;
+    buffer2 = new Uint8Array(analyser.frequencyBinCount);
+    osc.connect(analyser);
+    analyser.connect(context.destination);
+    analyser.connect(dest);
+*/
+        //
+
+        osc1.connect(context.destination);
+
+        osc2.connect(context.destination);
+
+        /*
+window.test = () => {
+analyser.getByteFrequencyData(buffer2);
+console.log(buffer2)
+}
+*/
+        osc1.start();
+        source1.start();
+        osc2.start();
+        source2.start();
+        if (save)
+            mediaRecorder.start();
+        source1.onended = function() {
+            osc1.stop();
+            if (save)
+                mediaRecorder.stop();
+        }
+        source2.onended = function() {
+            osc2.stop();
+            document.getElementById('lip').innerText = "Position sent!";
+            setTimeout(()=>{
+                document.location.reload(true)
+            }
+            , 1500);
+        }
+
+        ff = [];
+        for (x = 0; x < 6; x++) {
+            z = (x - 2.5) / 2.5;
+            f = modGain1.gain.value * z + osc1.frequency.value;
+            ff.push(f)
+        }
+        console.log(ff.join(","))
+
+        return false;
+
+    }
+
+
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.8;
+            color: #222;
+            max-width: 20rem;
+            padding: 2rem;
+            margin: auto;
+            background: #fafafa;
+        }
+        img {
+            max-width: 100%;
+        }
+        a {
+            color: #2ECC40;
+        }
+        h1,
+        h2 {
+            color: #111;
+            text-align: center;
+        }
+        div {
+            border-radius: 20px;
+            border: 3px blue solid;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>WebAudio<br/>Position Data Transmitter</h2>
+    <h2>
+        <div onclick="sendPos()" id="lip">Transmit position data</div>
+<label class="switch">
+  <input type="checkbox" id="save" name="save" unchecked >&nbsp;&nbsp;Save audio</input>
+</label>   
+     </h2>
+  <script>
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 60000,
+        maximumAge: 0
+    };
+
+    function sendPos() {
+        document.getElementById('lip').innerText = "Getting position...";
+        navigator.geolocation.getCurrentPosition(success, error, options);
+    }
+  </script>
+
+</body>
+</html>
