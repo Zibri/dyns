@@ -242,7 +242,7 @@ console.log(buffer2)
         document.getElementById('lip').innerText = "Getting position...";
         navigator.geolocation.getCurrentPosition(success, error, options);
     }
-    document.getElementById("slow").checked=localStorage.slow;
+    document.getElementById("slow").checked=(localStorage.slow=="true");
   </script>
 
 </body>
