@@ -32,11 +32,22 @@
             border: 3px blue solid;
             user-select: none;
         }
+        opt { font-size:24px; }
+        select { font-size:24px; }
     </style>
 </head>
 <body>
     <h2>Benchmark<br/>JS Function benchmark</h2>
     <h2>
+    	  <opt>Test duration:
+            <select id="dur" name="dur">
+                <option value=2.5>10 seconds</option>
+                <option value=7.5>30 seconds</option>
+                <option value=15>60 seconds</option>
+            </select>
+   	  	</opt>
+        <br/>
+        <br/>
         <div style="height:20rem;" id="logt"><textarea style="width:100%; height:100%; font-size: 16; resize:none; border: none; border-radius: 20px;" id="log" name="log" ></textarea></div>
         <br/>
         <div onclick="runit()" id="bench">Run benchmark</div>
@@ -47,33 +58,32 @@
      </h2>
     <script>
 
-function log(data) {
-  document.getElementById("log").textContent += data + "\n";
-}
+    function log(data) {
+        document.getElementById("log").textContent += data + "\n";
+    }
 
-function download(dataurl, filename) {
-  var a = document.createElement("a");
-  a.href = dataurl;
-  a.setAttribute("download", filename);
-  a.click();
-}
+    function download(dataurl, filename) {
+        var a = document.createElement("a");
+        a.href = dataurl;
+        a.setAttribute("download", filename);
+        a.click();
+    }
 
+    benchmark = (()=>{
 
-benchmark = (() => {
+        time_function = function(ms, f, num) {
+            var z = 0;
+            var t = new Date().getTime();
+            for (z = 0; ((new Date().getTime() - t) < ms); z++)
+                f(num);
+            return (z)
+        }
 
-  time_function = function(ms, f, num) {
-    var z = 0;
-    var t = new Date().getTime();
-    for (z = 0;
-      ((new Date().getTime() - t) < ms); z++) f(num);
-    return (z)
-  }
+        count1s = (n)=>n.toString(2).replace(/0/g, "").length
 
-  count1s = (n) => n.toString(2).replace(/0/g, "").length
+        count1j = (n)=>n.toString(2).split('').filter(v=>+v).length
 
-  count1j = (n) => n.toString(2).split('').filter(v => +v).length
-
-  /*
+        /*
       function count1(n, accumulator=0) {
           if (n === 0) {
               return accumulator
@@ -81,90 +91,90 @@ benchmark = (() => {
           return count1(n / 2, accumulator + (n & 1))
       }
   */
-  function countOnes(i) {
-    var str = i.toString(2);
-    var n;
-    var count = 0;
-    for (n = 0; n < str.length; ++n) {
-      if (str[n] === "1") {
-        ++count;
-      }
+        function countOnes(i) {
+            var str = i.toString(2);
+            var n;
+            var count = 0;
+            for (n = 0; n < str.length; ++n) {
+                if (str[n] === "1") {
+                    ++count;
+                }
+            }
+            return count;
+        }
+
+        function benchmark() {
+            function compare(a, b) {
+                if (a[1] > b[1]) {
+                    return -1;
+                }
+                if (a[1] < b[1]) {
+                    return 1;
+                }
+                return 0;
+            }
+
+            function count1sb(num) {
+                i = Math.floor(num / 0x100000000);
+                if (i > 0) {
+                    i = i - ((i >> 1) & 0x55555555);
+                    i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+                    i = (i + (i >> 4)) & 0x0f0f0f0f;
+                    i = i + (i >> 8);
+                    i = i + (i >> 16);
+                    count = i & 0x3f;
+                    i = num & 0xffffffff;
+                }
+                i = i - ((i >> 1) & 0x55555555);
+                i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+                i = (i + (i >> 4)) & 0x0f0f0f0f;
+                i = i + (i >> 8);
+                i = i + (i >> 16);
+                count += i & 0x3f;
+                return count;
+            }
+
+            count1q = (n)=>Number(n.toString(2).split("").sort().join("")).toString().length;
+
+            funcs = [[count1s, 0], [count1j, 0], [count1sb, 0], [countOnes, 0]];
+            funcs.forEach((ff)=>{
+                console.log("Benchmarking: " + ff[0].name);
+                ff[1] = time_function(1000*document.getElementById("dur").value, ff[0], Number.MAX_SAFE_INTEGER);
+                console.log("Score: " + ff[1]);
+
+            }
+            )
+            return funcs.sort(compare);
+        }
+        return benchmark;
     }
-    return count;
-  }
+    )()
+    function runit() {
+        document.getElementById("log").textContent = "";
+        document.getElementById("bench").innerText = "Running...";
+        setTimeout(()=>{
+            log("\nStarting benchmark...\n");
+            res = benchmark();
+            console.log("Winner: " + res[0][0].name + " !!!");
+            count = 1;
+            res.forEach((r)=>{
+                log((count++) + ". " + r[0].name + " score: " + Math.floor(10000 * r[1] / res[0][1]) / 100 + ((count == 2) ? "% *winner*" : "% speed of winner."));
+            }
+            );
+            log("\nWinner code:\n");
+            log(res[0][0].toString());
+            document.getElementById("bench").innerText = "Done.";
 
-  function benchmark() {
-    function compare(a, b) {
-      if (a[1] > b[1]) {
-        return -1;
-      }
-      if (a[1] < b[1]) {
-        return 1;
-      }
-      return 0;
+            if (document.getElementById("save").checked) {
+                download("data:text/html," + document.getElementById("log").textContent, "result.txt");
+            }
+            setTimeout(()=>{
+                document.getElementById("bench").innerText = "Run benchmark";
+            }
+            , 5000);
+        }
+        , 100);
     }
-
-    function count1sb(num) {
-      i = Math.floor(num / 0x100000000);
-      if (i > 0) {
-        i = i - ((i >> 1) & 0x55555555);
-        i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
-        i = (i + (i >> 4)) & 0x0f0f0f0f;
-        i = i + (i >> 8);
-        i = i + (i >> 16);
-        count = i & 0x3f;
-        i = num & 0xffffffff;
-      }
-      i = i - ((i >> 1) & 0x55555555);
-      i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
-      i = (i + (i >> 4)) & 0x0f0f0f0f;
-      i = i + (i >> 8);
-      i = i + (i >> 16);
-      count += i & 0x3f;
-      return count;
-    }
-
-    count1q = (n) => Number(n.toString(2).split("").sort().join("")).toString().length;
-
-    funcs = [
-      [count1s, 0],
-      [count1j, 0],
-      [count1sb, 0],
-      [countOnes, 0]
-    ];
-    funcs.forEach((ff) => {
-      console.log("Benchmarking: " + ff[0].name);
-      ff[1] = time_function(2500, ff[0], Number.MAX_SAFE_INTEGER);
-      console.log("Score: " + ff[1]);
-
-    })
-    return funcs.sort(compare);
-  }
-  return benchmark;
-})()
-function runit() {
-document.getElementById("log").textContent="";
-document.getElementById("bench").innerText="Running...";
-setTimeout(()=>{
-log("\nStarting benchmark...\n");
-res = benchmark();
-console.log("Winner: " + res[0][0].name + " !!!");
-count = 1;
-res.forEach((r) => {
-  log((count++) + ". " + r[0].name + " score: " + Math.floor(10000*r[1]/res[0][1])/100+((count==2)?"% *winner*":"% speed of winner."));
-});
-log("\nWinner code:\n");
-log(res[0][0].toString());
-document.getElementById("bench").innerText="Done.";
-
-if (document.getElementById("save").checked) {
-download("data:text/html,"+document.getElementById("log").textContent, "result.txt");
-}
-setTimeout(()=>{
-	document.getElementById("bench").innerText="Run benchmark";
-},5000);
-},100);
-}
     </script>
 </body>
 </html>
