@@ -1,6 +1,6 @@
 <html>
 <head>
-    <meta property="og:title" content="Benchmark">
+    <meta property="og:title" content="IP">
     <meta property="og:description" content="JS Benchmark">
     <meta property="og:image" content="B.png">
     <meta property="og:image:width" content="603">
@@ -11,7 +11,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
             line-height: 1.8;
             color: #222;
-            max-width: 20rem;
+            max-width: 40rem;
             padding: 2rem;
             margin: auto;
             background: #fafafa;
@@ -32,6 +32,9 @@
             border: 3px blue solid;
             user-select: none;
         }
+        input,label {
+        	font-size: 24;
+        }
         button {
             font-size: 24;
             padding-left: 1rem;
@@ -46,137 +49,269 @@
     <h2>
     	  <opt>Test duration:
             <select id="dur" name="dur">
+                <option value=1>4 seconds</option>
                 <option value=2.5>10 seconds</option>
                 <option value=7.5>30 seconds</option>
                 <option value=15>60 seconds</option>
             </select>
    	  	</opt>
         <br/>
+      <label><input type="checkbox" id="calibration_loop" name="calibration_loop" unchecked >&nbsp;&nbsp;Calibration</input></label>
         <br/>
         <div style="height:20rem;" id="logt"><textarea style="width:100%; height:100%; font-size: 16; resize:none; border: none; border-radius: 20px;" id="log" name="log" ></textarea></div>
         <br/>
-        <div onclick="runit()" id="bench">Run benchmark</div>
+        <div style="cursor: pointer;" onclick="runit()" id="bench">Run benchmark</div>
         <br/>
 
-  <button onclick='download("data:text/html," + document.getElementById("log").textContent, "result.txt")' id="save" name="save">Save result</button>
+  <button style="display: none;" onclick='download(document.getElementById("log").textContent,"result.txt","text/plain")' id="save" name="save">Save result</button>
  
-     </h2>
     <script>
-
     function log(data) {
         document.getElementById("log").textContent += data + "\n";
     }
 
-    function download(dataurl, filename) {
-        var a = document.createElement("a");
-        a.href = dataurl;
-        a.setAttribute("download", filename);
-        a.click();
+// document.getElementById("log").textContent
+
+function download(data, strFileName, strMimeType) {
+	
+	var self = window, // this script is only for browsers anyway...
+		u = "application/octet-stream", // this default mime also triggers iframe downloads
+		m = strMimeType || u, 
+		x = data,
+		D = document,
+		a = D.createElement("a"),
+		z = function(a){return String(a);},
+		
+		
+		B = self.Blob || self.MozBlob || self.WebKitBlob || z,
+		BB = self.MSBlobBuilder || self.WebKitBlobBuilder || self.BlobBuilder,
+		fn = strFileName || "download",
+		blob, 
+		b,
+		ua,
+		fr;
+
+	//if(typeof B.bind === 'function' ){ B=B.bind(self); }
+	
+	if(String(this)==="true"){ //reverse arguments, allowing download.bind(true, "text/xml", "export.xml") to act as a callback
+		x=[x, m];
+		m=x[0];
+		x=x[1]; 
+	}
+	
+	
+	
+	//go ahead and download dataURLs right away
+	if(String(x).match(/^data\:[\w+\-]+\/[\w+\-]+[,;]/)){
+		return navigator.msSaveBlob ?  // IE10 can't do a[download], only Blobs:
+			navigator.msSaveBlob(d2b(x), fn) : 
+			saver(x) ; // everyone else can save dataURLs un-processed
+	}//end if dataURL passed?
+	
+	try{
+	
+		blob = x instanceof B ? 
+			x : 
+			new B([x], {type: m}) ;
+	}catch(y){
+		if(BB){
+			b = new BB();
+			b.append([x]);
+			blob = b.getBlob(m); // the blob
+		}
+		
+	}
+	
+	
+	
+	function d2b(u) {
+		var p= u.split(/[:;,]/),
+		t= p[1],
+		dec= p[2] == "base64" ? atob : decodeURIComponent,
+		bin= dec(p.pop()),
+		mx= bin.length,
+		i= 0,
+		uia= new Uint8Array(mx);
+
+		for(i;i<mx;++i) uia[i]= bin.charCodeAt(i);
+
+		return new B([uia], {type: t});
+	 }
+	  
+	function saver(url, winMode){
+		
+		
+		if ('download' in a) { //html5 A[download] 			
+			a.href = url;
+			a.style="display: none;";
+			a.setAttribute("download", fn);
+			a.innerHTML = "downloading...";
+			D.body.appendChild(a);
+			setTimeout(function() {
+				a.click();
+				D.body.removeChild(a);
+				if(winMode===true){setTimeout(function(){ self.URL.revokeObjectURL(a.href);}, 250 );}
+			}, 66);
+			return true;
+		}
+		
+		//do iframe dataURL download (old ch+FF):
+		var f = D.createElement("iframe");
+		f.style="display: none;";
+		D.body.appendChild(f);
+		if(!winMode){ // force a mime that will download:
+			url="data:"+url.replace(/^data:([\w\/\-\+]+)/, u);
+		}
+		 
+	
+		f.src = url;
+		setTimeout(function(){ D.body.removeChild(f); }, 333);
+		
+	}//end saver 
+		
+
+	if (navigator.msSaveBlob) { // IE10+ : (has Blob, but not a[download] or URL)
+		return navigator.msSaveBlob(blob, fn);
+	} 	
+	
+	if(self.URL){ // simple fast and modern way using Blob and URL:
+		saver(self.URL.createObjectURL(blob), true);
+	}else{
+		// handle non-Blob()+non-URL browsers:
+		if(typeof blob === "string" || blob.constructor===z ){
+			try{
+				return saver( "data:" +  m   + ";base64,"  +  self.btoa(blob)  ); 
+			}catch(y){
+				return saver( "data:" +  m   + "," + encodeURIComponent(blob)  ); 
+			}
+		}
+		
+		// Blob but not URL:
+		fr=new FileReader();
+		fr.onload=function(e){
+			saver(this.result); 
+		};
+		fr.readAsDataURL(blob);
+	}	
+	return true;
+} /* end download() */
+
+
+benchmark = (()=>{
+    time_function = function(ms, f, num) {
+        var z = 0;
+        var t = new Date().getTime();
+        for (z = 0; ((new Date().getTime() - t) < ms); z++)
+            f(num);
+        return (z)
     }
 
-    benchmark = (()=>{
-
-        time_function = function(ms, f, num) {
-            var z = 0;
-            var t = new Date().getTime();
-            for (z = 0; ((new Date().getTime() - t) < ms); z++)
-                f(num);
-            return (z)
-        }
-
-        count1s = (n)=>n.toString(2).replace(/0/g, "").length
-
-        count1j = (n)=>n.toString(2).split('').filter(v=>+v).length
-
-        /*
-      function count1(n, accumulator=0) {
-          if (n === 0) {
-              return accumulator
-          }
-          return count1(n / 2, accumulator + (n & 1))
-      }
-  */
-        function countOnes(i) {
-            var str = i.toString(2);
-            var n;
-            var count = 0;
-            for (n = 0; n < str.length; ++n) {
-                if (str[n] === "1") {
-                    ++count;
-                }
-            }
-            return count;
-        }
-
-            function count1sb(num) {
-                i = Math.floor(num / 0x100000000);
-                if (i > 0) {
-                    i = i - ((i >> 1) & 0x55555555);
-                    i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
-                    i = (i + (i >> 4)) & 0x0f0f0f0f;
-                    i = i + (i >> 8);
-                    i = i + (i >> 16);
-                    count = i & 0x3f;
-                    i = num & 0xffffffff;
-                }
-                i = i - ((i >> 1) & 0x55555555);
-                i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
-                i = (i + (i >> 4)) & 0x0f0f0f0f;
-                i = i + (i >> 8);
-                i = i + (i >> 16);
-                count += i & 0x3f;
-                return count;
-            }
-
-//            count1q = (n)=>Number(n.toString(2).split("").sort().join("")).toString().length;
-
-        function benchmark() {
-            function compare(a, b) {
-                if (a[1] > b[1]) {
-                    return -1;
-                }
-                if (a[1] < b[1]) {
-                    return 1;
-                }
-                return 0;
-            }
-
-            funcs = [[count1s, 0], [count1j, 0], [count1sb, 0], [countOnes, 0]];
-            funcs.forEach((ff)=>{
-                console.log("Benchmarking: " + ff[0].name);
-                ff[1] = time_function(1000*document.getElementById("dur").value, ff[0], Number.MAX_SAFE_INTEGER);
-                console.log("Score: " + ff[1]);
-
-            }
-            )
-            return funcs.sort(compare);
-        }
-        return benchmark;
+    function count1sb(num) {
+        i = Math.floor(num / 0x100000000);
+        //                if (i > 0) {
+        i = i - ((i >> 1) & 0x55555555);
+        i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+        i = (i + (i >> 4)) & 0x0f0f0f0f;
+        i = i + (i >> 8);
+        i = i + (i >> 16);
+        count = i & 0x3f;
+        i = num & 0xffffffff;
+        //                }
+        i = i - ((i >> 1) & 0x55555555);
+        i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+        i = (i + (i >> 4)) & 0x0f0f0f0f;
+        i = i + (i >> 8);
+        i = i + (i >> 16);
+        count += i & 0x3f;
+        return count;
     }
-    )()
-    function runit() {
+    count1s = (n)=>n.toString(2).replace(/0/g, "").length
+
+    count1j = (n)=>n.toString(2).split('').filter(v=>+v).length
+
+    function count1(n, accumulator=0) {
+        if (n === 0) {
+            return accumulator
+        }
+        return count1(n / 2, accumulator + (n & 1))
+    }
+
+    function countOnes(i) {
+        var str = i.toString(2);
+        var n;
+        var count = 0;
+        for (n = 0; n < str.length; ++n) {
+            if (str[n] === "1") {
+                ++count;
+            }
+        }
+        return count;
+    }
+
+    function donothing(i){
+    	return i;
+    }
+    
+    function benchmark() {
+
+        kl=document.getElementById("calibration_loop").checked;
+
+        function compare(a, b) {
+            if (a[1] > b[1]) {
+                return -1;
+            }
+            if (a[1] < b[1]) {
+                return 1;
+            }
+            return 0;
+        }
+
+        funcs = [count1sb, count1s, countOnes, count1j];
+        results = [];
+        if (kl) {
+            k = Math.round(time_function(5000, donothing, Number.MAX_SAFE_INTEGER) / 10000);
+        } else {
+        	  k = 1;
+        }
+
+        funcs.forEach((ff)=>{
+            console.log("Benchmarking: " + ff.name);
+            var s = time_function(1000*document.getElementById("dur").value, ff, Number.MAX_SAFE_INTEGER)/k;
+            results.push([ff, s]);
+            console.log("Score: " + s);
+
+        }
+        )
+        return results.sort(compare);
+    }
+    return benchmark;
+}
+)()
+
+   function runit() {
         document.getElementById("log").textContent = "";
         document.getElementById("bench").innerText = "Running...";
+        document.getElementById("save").style="display: none;";
         setTimeout(()=>{
             log("\nStarting benchmark...\n");
             res = benchmark();
             console.log("Winner: " + res[0][0].name + " !!!");
             count = 1;
             res.forEach((r)=>{
-                log((count++) + ". " + r[0].name + " score: " + Math.floor(10000 * r[1] / res[0][1]) / 100 + ((count == 2) ? "% *winner*" : "% speed of winner."));
+                log((count++) + ". " + r[0].name + " score: " + Math.round(10000 * r[1] / res[0][1]) / 100 + ((count == 2) ? "% *winner*" : "% speed of winner.")+"\n   speed="+Math.round(r[1]*100)/100);
             }
             );
             log("\nWinner code:\n");
             log(res[0][0].toString());
             document.getElementById("bench").innerText = "Done.";
-
+            document.getElementById("save").style="";
             if (document.getElementById("save").checked) {
                 download("data:text/html," + document.getElementById("log").textContent, "result.txt");
             }
             setTimeout(()=>{
                 document.getElementById("bench").innerText = "Run benchmark";
             }
-            , 5000);
+            , 2000);
         }
         , 100);
     }
