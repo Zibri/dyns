@@ -183,7 +183,7 @@ mobilecheck = function() {
                     analyser = context.createAnalyser();
                     analyser.fftSize = 2048;
                     analyser.smoothingTimeConstant = 0.1;
-                    noiseFloorChange(85);
+                    noiseFloorChange(95);
                     microphone.connect(analyser);
 
                     console.log('making the plot visible');
