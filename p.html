@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Spectral demo test</title>
+        <title>Spectral demo by Zibri</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
@@ -11,6 +11,9 @@
                 margin: 0;
                 padding: 0;
                 background-color: black;
+                color: yellow;
+                z-index: 1;
+                font-size : 24px;
             }
 
             canvas {
@@ -18,6 +21,7 @@
                 width: 100%;
                 height: 80px;
                 border: 0px;
+                z-index: 0;
             }
 
             input[type='checkbox'] {
@@ -45,9 +49,15 @@
                 height: 25px;
                 width: 25px;
             }
+            button {
+            	font-size : 24px;
+            }
         </style>
     </head>
     <body>
+    <br/>
+    	<center><span>Spectral demo by Zibri (zibri@zibri.org)</span></center>
+        <br/>
         <canvas id="colorPlot">ERROR: Your browser does not support the HTML5 canvas tag.
         </canvas>
         <br/>
@@ -59,7 +69,7 @@
         <br/>
         <br/>
         <center>
-            <button id="analyze" onclick="main();">Start</button>
+            <button id="analyze" onclick="main();">&nbsp;Start&nbsp;</button>
         </center>
         <script type="text/javascript">
 mobilecheck = function() {
@@ -182,8 +192,8 @@ mobilecheck = function() {
 
                     analyser = context.createAnalyser();
                     analyser.fftSize = 2048;
-                    analyser.smoothingTimeConstant = 0.1;
-                    noiseFloorChange(95);
+                    analyser.smoothingTimeConstant = 0.5;
+                    noiseFloorChange(85);
                     microphone.connect(analyser);
 
                     console.log('making the plot visible');
