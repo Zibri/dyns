@@ -192,7 +192,7 @@ mobilecheck = function() {
 
                     analyser = context.createAnalyser();
                     analyser.fftSize = 2048;
-                    analyser.smoothingTimeConstant = 0.5;
+                    analyser.smoothingTimeConstant = 0;
                     noiseFloorChange(85);
                     microphone.connect(analyser);
 
