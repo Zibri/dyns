@@ -24,7 +24,7 @@
             canvas {
                 position: absolute;
                 width: 1920px;
-                height: 1024px;
+                height: 512px;
                 border: 0px;
                 z-index: 0;
             }
@@ -34,7 +34,7 @@
         <center>
             <span>Spectral demo by Zibri (zibri@zibri.org)</span>
         </center>
-</br><canvas style="display:none" width='1920' height='1024' id='surface'></canvas>
+</br><canvas style="display:none" width='1920' height='512' id='surface'></canvas>
 <button id="analyze" onclick="letsgo();">&nbsp;Start &nbsp;</button>
 <script>
     letsgo = function() {
@@ -85,10 +85,10 @@
                 analyser.getByteFrequencyData(buffer);
                 ctx.drawImage(canvas, -1, 0);
 
-                for (var i = 1024; i > 16; i--) {
+                for (var i = 1023; i > 16; i--) {
                     var c = buffer[i];
                     ctx.fillStyle = 'hsl(' + (c / 1.3 + 250) + ',100%,' + c / 2.55 + '%)';
-                    ctx.fillRect(1919, i, 1, 1);
+                    ctx.fillRect(1919, i/2, 1, 1);
                 }
             }
             process();
