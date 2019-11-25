@@ -2,14 +2,29 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="height=device-height, initial-scale=0.5, user-scalable=no">
+        <meta name="viewport" content="height=device-height, initial-scale=1, user-scalable=no">
         <style>
+            @font-face {
+                font-family: "C64 User Mono";
+                src: url("https://seanslater.github.io/c64-loading/C64_User_Mono_v1.0-STYLE.eot");
+                src: url("https://seanslater.github.io/c64-loading/C64_User_Mono_v1.0-STYLE.eot?#iefix") format("embedded-opentype"), url("https://seanslater.github.io/c64-loading/C64_User_Mono_v1.0-STYLE.woff") format("woff"), url("https://seanslater.github.io/c64-loading/C64_User_Mono_v1.0-STYLE.ttf") format("truetype");
+                font-weight: normal;
+                font-style: normal;
+            }
+
             button, body, span {
-                font-size : 32px;
+                font-size : 24px;
+                font-family: 'C64 User Mono', sans-serif;
             }
 
             select {
                 font-size : 24px;
+                font-family: 'C64 User Mono', sans-serif;
+            }
+
+            select {
+                width: 200px;
+                text-align-last: center;
             }
 
             html, body {
@@ -25,14 +40,21 @@
             }
 
             canvas {
-                width: 1920px;
+                width: 100%;
                 height: 512px;
                 border: 0px;
                 z-index: 0;
+                //background-color: #222;
             }
 
             input[type=range] {
                 width: 200px;
+            }
+
+            @media (min-width: 320px) and (max-width: 480px) {
+                canvas {
+                    height: 300px;
+                }
             }
         </style>
         <title>Spectrograph</title>
@@ -42,21 +64,23 @@
 <center>
     <span>Spectral demo by Zibri (zibri@zibri.org)</span>
 </center>
-</br></br><canvas style="display:none" width='1920' height='512' id='surface'></canvas>
+</br></br><canvas width='1920' height='512' id='surface'></canvas>
 <button id="analyze" onclick="letsgo(this)">&nbsp;Start &nbsp;</button>
-</br></br>Profile: 
-
+</br></br>Profile:
 <select id="profile" name="profile" onchange="setProf(profile.value)">
     <option value="[100,250,1.3]">Default</option>
     <option selected value="[70,200,1.5]">Zibri</option>
     <option value="[70,200,1.4]">Zibri 2</option>
-    <option value="[70,190,1.4]">Zibri 3</option>
+    <option value="[0,0,1]">B/W</option>
+    <option value="[100,220,4]">Electric</option>
+    <option value="[50,220,1.8]">Boh</option>
+    <option value="[50,300,2.2]">Boh 2</option>
 </select>
 </br></br>S &nbsp;<input type="range" id="rangeInput" name="rangeInput" min="0" max="100" value="100" oninput="sat.value=rangeInput.value">
 <output name="sat" id="sat" for="rangeInput">100</output>
 </br>H &nbsp;<input type="range" id="rangeInput2" name="rangeInput2" min="0" max="360" value="250" oninput="hue.value=rangeInput2.value">
 <output name="hue" id="hue" for="rangeInput2">250</output>
-</br>K &nbsp;<input type="range" id="rangeInput3" name="rangeInput3" min="100" max="400" value="130" oninput="k.value=rangeInput3.value/100">
+</br>K &nbsp;<input type="range" id="rangeInput3" name="rangeInput3" min="70" max="400" value="130" oninput="k.value=rangeInput3.value/100">
 <output name="k" id="k" for="rangeInput3">1.3</output>
 <script>
     setProf = function(p) {
@@ -71,10 +95,9 @@
     setProf("[70,200,1.5]");
 
     letsgo = function() {
-        //mic = !(window.event.ctrlKey & window.event.altKey);
+        
         mic = true;
-        //console.log(window.event);
-        //document.documentElement.webkitRequestFullScreen();
+
         document.getElementById("analyze").style = "display:none";
         document.getElementById("surface").style = "display:block";
         if (mic)
@@ -83,28 +106,17 @@
             fixit = 0;
         let constraints = {
             audio: {
-                optional: [{
-                    echoCancellation: false
-                }, {
-                    mozAutoGainControl: false
-                }, {
-                    mozNoiseSuppression: false
-                }, {
-                    googEchoCancellation: false
-                }, {
-                    googAutoGainControl: false
-                }, {
-                    googNoiseSuppression: false
-                }, {
-                    googHighpassFilter: false
-                }]
+                echoCancellation: false,
+                mozAutoGainControl: false,
+                mozNoiseSuppression: false,
+                googEchoCancellation: false,
+                googAutoGainControl: false,
+                googNoiseSuppression: false,
+                googHighpassFilter: false
             }
         };
         processStream = function(stream) {
-            if (mic)
-                window.microphone = context.createMediaStreamSource(stream);
-            else
-                window.microphone = stream;
+            window.microphone = context.createMediaStreamSource(stream);
             var analyser = context.createAnalyser();
             analyser.smoothingTimeConstant = 0.0;
             analyser.fftSize = 2048;
@@ -115,19 +127,14 @@
             var canvas = document.getElementById('surface')
               , ctx = canvas.getContext('2d');
             convertToMono(microphone).connect(analyser);
-            if (!mic) {
-                stream.connect(context.destination);
-                stream.start();
-            }
             function process() {
                 window.requestAnimationFrame(process);
-                if (paused) {
+                if (paused)
                     return;
-                }
                 analyser.getByteFrequencyData(buffer);
                 ctx.drawImage(canvas, -1, 0);
                 for (var i = 1023; i > fixit; i--) {
-                    var c = buffer[i];
+                    var c = buffer[i] + 1;
                     ctx.fillStyle = 'hsl(' + (c / (parseInt(document.getElementById("rangeInput3").value) / 100) + parseInt(document.getElementById("rangeInput2").value)) + ',' + document.getElementById("rangeInput").value + '%,' + c / 2.55 + '%)';
                     ctx.fillRect(1919, i / 2, 1, 1);
                 }
@@ -142,35 +149,13 @@
             var err = function() {
                 console.log('Error');
             }
-            if (mic) {
-                if (navigator.webkitGetUserMedia)
+                 if (navigator.webkitGetUserMedia)
                     navigator.webkitGetUserMedia(constraints, processStream, err);
                 else
                     navigator.mediaDevices.getUserMedia({
                         audio: true
                     }).then(processStream).catch(err);
-            } else {
-                var xhr = new XMLHttpRequest();
-                /* Open a GET request connection to the .mp3 */
-                xhr.open('GET', 'demo9.mp3', true);
-                /* Set the XHR responseType to arraybuffer */
-                xhr.responseType = 'arraybuffer';
-                xhr.onload = function() {
-
-                    /* The files arraybuffer is available at xhr.response */
-                    sound = context.createBufferSource();
-
-                    context.decodeAudioData(xhr.response, function(buffer) {
-                        /* Set the buffer to our decoded AudioBuffer. */
-                        sound.buffer = buffer;
-
-                        processStream(sound);
-                    });
-                }
-
-                xhr.send();
-            }
-        } catch (e) {
+         } catch (e) {
             document.write("Your browser does not support this.")
         }
         function convertToMono(input) {
