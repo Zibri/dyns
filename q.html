@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Spectrograph</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="height=device-height, initial-scale=0.5, user-scalable=no">
         <style>
             button, body, span {
                 font-size : 32px;
             }
+
+            select {
+                font-size : 24px;
+            }
+
             html, body {
                 height: 100%;
                 width: 100%;
@@ -19,51 +23,63 @@
                 z-index: 1;
                 font-size : 24px;
             }
+
             canvas {
                 width: 1920px;
                 height: 512px;
                 border: 0px;
                 z-index: 0;
             }
+
             input[type=range] {
                 width: 200px;
             }
         </style>
+        <title>Spectrograph</title>
     </head>
     <body>
-    </br>
-        <center>
-            <span>Spectral demo by Zibri (zibri@zibri.org)</span>
-        </center>
-        </br>
-</br><canvas style="display:none" width='1920' height='512' id='surface'></canvas>
-<button id="analyze" onclick="letsgo();">&nbsp;Start &nbsp;</button>
 </br>
-</br>
-S&nbsp;<input type="range" id="rangeInput" 
-       name="rangeInput" min="0" max="100" value="100"
-       oninput="sat.value=rangeInput.value">                                                       
+<center>
+    <span>Spectral demo by Zibri (zibri@zibri.org)</span>
+</center>
+</br></br><canvas style="display:none" width='1920' height='512' id='surface'></canvas>
+<button id="analyze" onclick="letsgo(this)">&nbsp;Start &nbsp;</button>
+</br></br>Profile: 
 
+<select id="profile" name="profile" onchange="setProf(profile.value)">
+    <option value="[100,250,1.3]">Default</option>
+    <option selected value="[70,200,1.5]">Zibri</option>
+    <option value="[70,200,1.4]">Zibri 2</option>
+    <option value="[70,190,1.4]">Zibri 3</option>
+</select>
+</br></br>S &nbsp;<input type="range" id="rangeInput" name="rangeInput" min="0" max="100" value="100" oninput="sat.value=rangeInput.value">
 <output name="sat" id="sat" for="rangeInput">100</output>
-</br>
-H&nbsp;<input type="range" id="rangeInput2" 
-       name="rangeInput2" min="0" max="360" value="250"
-       oninput="hue.value=rangeInput2.value">                                                       
-
+</br>H &nbsp;<input type="range" id="rangeInput2" name="rangeInput2" min="0" max="360" value="250" oninput="hue.value=rangeInput2.value">
 <output name="hue" id="hue" for="rangeInput2">250</output>
-</br>
-K&nbsp;<input type="range" id="rangeInput3" 
-       name="rangeInput3" min="100" max="400" value="130"
-       oninput="k.value=rangeInput3.value/100">                                                       
-
+</br>K &nbsp;<input type="range" id="rangeInput3" name="rangeInput3" min="100" max="400" value="130" oninput="k.value=rangeInput3.value/100">
 <output name="k" id="k" for="rangeInput3">1.3</output>
-
 <script>
-    letsgo = function() {
-        document.documentElement.webkitRequestFullScreen();
-        document.getElementById("analyze").style = "display:none";
+    setProf = function(p) {
+        pr = JSON.parse(p);
+        rangeInput.value = pr[0];
+        rangeInput2.value = pr[1];
+        rangeInput3.value = pr[2] * 100;
+        rangeInput.oninput();
+        rangeInput2.oninput();
+        rangeInput3.oninput();
+    }
+    setProf("[70,200,1.5]");
 
+    letsgo = function() {
+        mic = !(window.event.ctrlKey & window.event.altKey);
+        //console.log(window.event);
+        //document.documentElement.webkitRequestFullScreen();
+        document.getElementById("analyze").style = "display:none";
         document.getElementById("surface").style = "display:block";
+        if (mic)
+            fixit = 16;
+        else
+            fixit = 0;
         let constraints = {
             audio: {
                 optional: [{
@@ -84,61 +100,81 @@ K&nbsp;<input type="range" id="rangeInput3"
             }
         };
         processStream = function(stream) {
-            window.microphone = context.createMediaStreamSource(stream);
+            if (mic)
+                window.microphone = context.createMediaStreamSource(stream);
+            else
+                window.microphone = stream;
             var analyser = context.createAnalyser();
             analyser.smoothingTimeConstant = 0.0;
             analyser.fftSize = 2048;
-
             analyser.minDecibels = -85;
             analyser.maxDecibels = analyser.minDecibels + 50;
-
             var buffer = new Uint8Array(1024)
               , paused = false;
             var canvas = document.getElementById('surface')
               , ctx = canvas.getContext('2d');
-
             convertToMono(microphone).connect(analyser);
-
+            if (!mic) {
+                stream.connect(context.destination);
+                stream.start();
+            }
             function process() {
                 window.requestAnimationFrame(process);
-
-                if (paused)
+                if (paused) {
                     return;
+                }
                 analyser.getByteFrequencyData(buffer);
                 ctx.drawImage(canvas, -1, 0);
-
-                for (var i = 1023; i > 16; i--) {
+                for (var i = 1023; i > fixit; i--) {
                     var c = buffer[i];
-                    ctx.fillStyle = 'hsl(' + (c / (parseInt(document.getElementById("rangeInput3").value)/100) + parseInt(document.getElementById("rangeInput2").value)) + ','+document.getElementById("rangeInput").value+'%,' + c / 2.55 + '%)';
-                    ctx.fillRect(1919, i/2, 1, 1);
+                    ctx.fillStyle = 'hsl(' + (c / (parseInt(document.getElementById("rangeInput3").value) / 100) + parseInt(document.getElementById("rangeInput2").value)) + ',' + document.getElementById("rangeInput").value + '%,' + c / 2.55 + '%)';
+                    ctx.fillRect(1919, i / 2, 1, 1);
                 }
             }
             process();
-
             canvas.onclick = function() {
                 paused = !paused;
             }
         }
-
         try {
             var context = new window.AudioContext();
             var err = function() {
                 console.log('Error');
             }
+            if (mic) {
+                if (navigator.webkitGetUserMedia)
+                    navigator.webkitGetUserMedia(constraints, processStream, err);
+                else
+                    navigator.mediaDevices.getUserMedia({
+                        audio: true
+                    }).then(processStream).catch(err);
+            } else {
+                var xhr = new XMLHttpRequest();
+                /* Open a GET request connection to the .mp3 */
+                xhr.open('GET', 'demo9.mp3', true);
+                /* Set the XHR responseType to arraybuffer */
+                xhr.responseType = 'arraybuffer';
+                xhr.onload = function() {
 
-            if (navigator.webkitGetUserMedia)
-                navigator.webkitGetUserMedia(constraints, processStream, err);
-            else
-                navigator.mediaDevices.getUserMedia(constraints).then(processStream).catch(err);
+                    /* The files arraybuffer is available at xhr.response */
+                    sound = context.createBufferSource();
 
+                    context.decodeAudioData(xhr.response, function(buffer) {
+                        /* Set the buffer to our decoded AudioBuffer. */
+                        sound.buffer = buffer;
+
+                        processStream(sound);
+                    });
+                }
+
+                xhr.send();
+            }
         } catch (e) {
             document.write("Your browser does not support this.")
         }
-
         function convertToMono(input) {
             var splitter = context.createChannelSplitter(2);
             var merger = context.createChannelMerger(2);
-
             input.connect(splitter);
             splitter.connect(merger, 0, 0);
             splitter.connect(merger, 0, 1);
