@@ -6,7 +6,7 @@
         <meta name="viewport" content="height=device-height, initial-scale=0.5, user-scalable=no">
         <style>
             button {
-                font-size : 24px;
+                font-size : 32px;
             }
 
             html, body {
@@ -31,9 +31,11 @@
         </style>
     </head>
     <body>
+        </br>
         <center>
             <span>Spectral demo by Zibri (zibri@zibri.org)</span>
         </center>
+        </br>
 </br><canvas style="display:none" width='1920' height='512' id='surface'></canvas>
 <button id="analyze" onclick="letsgo();">&nbsp;Start &nbsp;</button>
 <script>
@@ -107,9 +109,7 @@
             if (navigator.webkitGetUserMedia)
                 navigator.webkitGetUserMedia(constraints, processStream, err);
             else
-                navigator.mediaDevices.getUserMedia({
-                    audio: true
-                }).then(processStream).catch(err);
+                navigator.mediaDevices.getUserMedia(constraints).then(processStream).catch(err);
 
         } catch (e) {
             document.write("Your browser does not support this.")
