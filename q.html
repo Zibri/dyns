@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Spectrogram</title>
+        <title>Spectrograph</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="height=device-height, initial-scale=0.5, user-scalable=no">
         <style>
-            button {
+            button, body, span {
                 font-size : 32px;
             }
-
             html, body {
                 height: 100%;
                 width: 100%;
@@ -20,24 +19,45 @@
                 z-index: 1;
                 font-size : 24px;
             }
-
             canvas {
-                position: absolute;
                 width: 1920px;
                 height: 512px;
                 border: 0px;
                 z-index: 0;
             }
+            input[type=range] {
+                width: 200px;
+            }
         </style>
     </head>
     <body>
-        </br>
+    </br>
         <center>
             <span>Spectral demo by Zibri (zibri@zibri.org)</span>
         </center>
         </br>
 </br><canvas style="display:none" width='1920' height='512' id='surface'></canvas>
 <button id="analyze" onclick="letsgo();">&nbsp;Start &nbsp;</button>
+</br>
+</br>
+S&nbsp;<input type="range" id="rangeInput" 
+       name="rangeInput" min="0" max="100" value="100"
+       oninput="sat.value=rangeInput.value">                                                       
+
+<output name="sat" id="sat" for="rangeInput">100</output>
+</br>
+H&nbsp;<input type="range" id="rangeInput2" 
+       name="rangeInput2" min="0" max="360" value="250"
+       oninput="hue.value=rangeInput2.value">                                                       
+
+<output name="hue" id="hue" for="rangeInput2">250</output>
+</br>
+K&nbsp;<input type="range" id="rangeInput3" 
+       name="rangeInput3" min="100" max="400" value="130"
+       oninput="k.value=rangeInput3.value/100">                                                       
+
+<output name="k" id="k" for="rangeInput3">1.3</output>
+
 <script>
     letsgo = function() {
         document.documentElement.webkitRequestFullScreen();
@@ -89,7 +109,7 @@
 
                 for (var i = 1023; i > 16; i--) {
                     var c = buffer[i];
-                    ctx.fillStyle = 'hsl(' + (c / 1.3 + 250) + ',100%,' + c / 2.55 + '%)';
+                    ctx.fillStyle = 'hsl(' + (c / (parseInt(document.getElementById("rangeInput3").value/100)) + parseInt(document.getElementById("rangeInput2").value)) + ','+document.getElementById("rangeInput").value+'%,' + c / 2.55 + '%)';
                     ctx.fillRect(1919, i/2, 1, 1);
                 }
             }
