@@ -109,7 +109,7 @@ K&nbsp;<input type="range" id="rangeInput3"
 
                 for (var i = 1023; i > 16; i--) {
                     var c = buffer[i];
-                    ctx.fillStyle = 'hsl(' + (c / (parseInt(document.getElementById("rangeInput3").value/100)) + parseInt(document.getElementById("rangeInput2").value)) + ','+document.getElementById("rangeInput").value+'%,' + c / 2.55 + '%)';
+                    ctx.fillStyle = 'hsl(' + (c / (parseInt(document.getElementById("rangeInput3").value)/100) + parseInt(document.getElementById("rangeInput2").value)) + ','+document.getElementById("rangeInput").value+'%,' + c / 2.55 + '%)';
                     ctx.fillRect(1919, i/2, 1, 1);
                 }
             }
