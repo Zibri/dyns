@@ -208,22 +208,24 @@
                 analyser.minDecibels = n.value;
                 //-85;
                 analyser.maxDecibels = analyser.minDecibels + 50;
-
-                if (paused)
-                    return;
                 analyser.getByteFrequencyData(buffer);
+                
+                if (!paused) {                  
                 ctx.drawImage(canvas, -1, 0);
                 for (var i = 800; i > fixit; i--) {
                     var c = buffer[i / (2048 / fftSize)] + 1;
                     ctx.fillStyle = 'hsl(' + (c / (parseInt(document.getElementById("rangeInput3").value) / 100) + parseInt(document.getElementById("rangeInput2").value)) + ',' + document.getElementById("rangeInput").value + '%,' + c / 2.55 + '%)';
                     ctx.fillRect(canvas.width - 1, i / 2, 1, 1);
                 }
+              }
                 window.requestAnimationFrame(process);
+              
             }
-            process();
+
             canvas.onclick = function() {
                 paused = !paused;
             }
+            process();
         }
         try {
             var context = new window.AudioContext();
