@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="crt">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="height=1080, width=1920, user-scalable=no"/>
@@ -92,7 +92,7 @@
         </style>
         <title>Spectrograph</title>
     </head>
-    <body class="crt">
+    <body>
 </br>
 <center>
     <span>Spectral demo by Zibri (zibri@zibri.org)</span>
@@ -139,12 +139,11 @@
         return objURL;
     }
 
+
     if ('nosl'in pqs()) {
-        document.body.className = ""
-    } else {
-    	document.documentElement.className="crt";
-    	document.body.className = ""
+        document.documentElement.className="";
     }
+
     setProf = function(p) {
         pr = JSON.parse(p);
         rangeInput.value = pr[0];
@@ -194,7 +193,9 @@
         // minimum 512
 
         processStream = function(stream) {
+
             window.microphone = context.createMediaStreamSource(stream);
+
             var analyser = context.createAnalyser();
             analyser.smoothingTimeConstant = 0.0;
             analyser.fftSize = fftSize;
@@ -203,7 +204,6 @@
             var canvas = document.getElementById('surface')
               , ctx = canvas.getContext('2d');
             convertToMono(microphone).connect(analyser);
-
             function process() {
                 analyser.minDecibels = n.value;
                 //-85;
@@ -239,7 +239,6 @@
                     navigator.mediaDevices.getUserMedia({
                         audio: true
                     }).then(processStream).catch(err);
-
         } catch (e) {
             document.write("Your browser does not support this.")
         }
