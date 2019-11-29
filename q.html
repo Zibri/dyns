@@ -4,29 +4,62 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="height=1080, width=1920, user-scalable=no"/>
         <style>
-            @font-face {
-                font-family: "C64 User Mono";
-                src: url("https://seanslater.github.io/c64-loading/C64_User_Mono_v1.0-STYLE.eot");
-                src: url("https://seanslater.github.io/c64-loading/C64_User_Mono_v1.0-STYLE.eot?#iefix") format("embedded-opentype"), url("https://seanslater.github.io/c64-loading/C64_User_Mono_v1.0-STYLE.woff") format("woff"), url("https://seanslater.github.io/c64-loading/C64_User_Mono_v1.0-STYLE.ttf") format("truetype");
-                font-weight: normal;
-                font-style: normal;
+            @keyframes blinker {
+                50% {
+                    top: -3px
+                }
             }
 
-            button, body, span {
-                font-size : 24px;
-                font-family: 'C64 User Mono', sans-serif;
-                //background-color: black;
-                background-color: #20398d;
+            @font-face {
+                font-family: "C64 User Mono";
+                src: url(https://seanslater.github.io/c64-loading/C64_User_Mono_v1.0-STYLE.eot);
+                src: url(https://seanslater.github.io/c64-loading/C64_User_Mono_v1.0-STYLE.eot?#iefix) format("embedded-opentype"),url(https://seanslater.github.io/c64-loading/C64_User_Mono_v1.0-STYLE.woff) format("woff"),url(https://seanslater.github.io/c64-loading/C64_User_Mono_v1.0-STYLE.ttf) format("truetype");
+                font-weight: 400;
+                font-style: normal
+            }
+
+            body,button,span {
+                font-family: 'C64 User Mono',sans-serif;
+                //background-color: #000;
+                background-color: #20398d
+            }
+
+            button,span {
+                font-size: 24px;
+                color: #b8c76f
+            }
+
+            .crt::before,body {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0
+            }
+
+            body {
+                width: 1056px;
+                //margin: 0 auto 0 auto;
+                //vertical-align: middle;
+                margin: auto;
+                height: 720px
+            }
+
+            canvas,select {
+                border: 0;
+                background-color: #000
+            }
+
+            body,html,select {
                 color: #b8c76f;
+                font-size: 24px
             }
 
             select {
-                font-size : 24px;
-                font-family: 'C64 User Mono', sans-serif;
+                font-family: 'C64 User Mono',sans-serif;
                 width: 212px;
                 text-align-last: center;
-                background-color: black;
-                color: #b8c76f;
+                outline: 0
             }
 
             html {
@@ -34,60 +67,27 @@
                 width: 100%;
                 margin: 0;
                 padding: 0;
-                background-color: black;
-                color: #b8c76f;
                 text-align: center;
                 z-index: 1;
-                font-size : 24px;
-                background-color: #6076c5;
-            }
-
-            body {   // c64 is 960x600 with 24 px font
-                //height: 800px;
-                width: 1056px;
-                background-color: #20398d;
-                //margin-top: auto;
-                margin-bottom: auto;
-                //margin: 0 auto 0 auto;
-                //vertical-align: middle ;
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                margin: auto;
-                height: 720px;
+                background-color: #6076c5
             }
 
             canvas {
-                border: 0px;
-                z-index: 0;
-                background-color: black; //#20398d;
+                z-index: 0
             }
 
             input[type=range] {
-                width: 230px;
+                width: 230px
             }
 
             .crt::before {
                 content: " ";
                 display: block;
-                position: absolute;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                right: 0;
-                background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.5) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+                background: linear-gradient(rgba(18,16,16,0) 50%,rgba(0,0,0,.5) 50%),linear-gradient(90deg,rgba(255,0,0,.1),rgba(0,255,0,.05),rgba(0,0,255,.1),rgba(0,0,0,.2));
                 z-index: 2;
-                background-size: 100% 2px, 4px 100%;
+                background-size: 100% 2px,4px 100%;
                 pointer-events: none;
-                animation: blinker 0.08s step-end infinite;
-            }
-
-            @keyframes blinker {
-                50% {
-                    top: -3px;
-                }
+                animation: blinker .08s step-end infinite
             }
         </style>
         <title>Spectrograph</title>
@@ -105,11 +105,6 @@
 <span id="sss">
     <button id="analyze" onclick="letsgo(this)">&nbsp;Start&nbsp;</button>
 </br></br></span>Profile: 
-
-
-
-
-
 <select id="profile" name="profile" onchange="setProf(profile.value)">
     <option value="[100,250,1.3,-85]">Default</option>
     <option selected value="[70,200,1.5,-85]">Zibri</option>
@@ -139,9 +134,8 @@
         return objURL;
     }
 
-
     if ('nosl'in pqs()) {
-        document.documentElement.className="";
+        document.documentElement.className = "";
     }
 
     setProf = function(p) {
@@ -166,8 +160,8 @@
         document.documentElement.webkitRequestFullScreen();
         //screen.orientation.lock('landscape');
         //document.getElementById("sss").style = "display:none";
-        document.getElementById("analyze").innerHTML="&nbsp;Quit&nbsp;"
-        document.getElementById("analyze").onclick=window.location.reload.bind(window.location);
+        document.getElementById("analyze").innerHTML = "&nbsp;Quit&nbsp;"
+        document.getElementById("analyze").onclick = window.location.reload.bind(window.location);
         document.getElementById("surface").style = "display:block";
         if (mic)
             fixit = 16;
@@ -193,7 +187,6 @@
         // minimum 512
 
         processStream = function(stream) {
-
             window.microphone = context.createMediaStreamSource(stream);
             var analyser = context.createAnalyser();
             analyser.smoothingTimeConstant = 0.0;
@@ -209,17 +202,17 @@
                 //-85;
                 analyser.maxDecibels = analyser.minDecibels + 50;
                 analyser.getByteFrequencyData(buffer);
-                
-                if (!paused) {                  
-                ctx.drawImage(canvas, -1, 0);
-                for (var i = 800; i > fixit; i--) {
-                    var c = buffer[i / (2048 / fftSize)] + 1;
-                    ctx.fillStyle = 'hsl(' + (c / (parseInt(document.getElementById("rangeInput3").value) / 100) + parseInt(document.getElementById("rangeInput2").value)) + ',' + document.getElementById("rangeInput").value + '%,' + c / 2.55 + '%)';
-                    ctx.fillRect(canvas.width - 1, 4+i / 2 - fixit, 1, 1);
+
+                if (!paused) {
+                    ctx.drawImage(canvas, -1, 0);
+                    for (var i = 800; i > fixit; i--) {
+                        var c = buffer[i / (2048 / fftSize)] + 1;
+                        ctx.fillStyle = 'hsl(' + (c / (parseInt(document.getElementById("rangeInput3").value) / 100) + parseInt(document.getElementById("rangeInput2").value)) + ',' + document.getElementById("rangeInput").value + '%,' + c / 2.55 + '%)';
+                        ctx.fillRect(canvas.width - 1, 4 + i / 2 - fixit, 1, 1);
+                    }
                 }
-              }
                 window.requestAnimationFrame(process);
-              
+
             }
 
             canvas.onclick = function() {
@@ -232,6 +225,7 @@
             var err = function() {
                 console.log('Error');
             }
+
                 if (navigator.webkitGetUserMedia)
                     navigator.webkitGetUserMedia(constraints, processStream, err);
                 else
