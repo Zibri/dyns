@@ -3,8 +3,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="height=1080, width=1920, user-scalable=no"/>
-        <style>
-            @keyframes blinker {
+        <style disabled>
+            @keyframes flicker {
                 50% {
                     top: -3px
                 }
@@ -25,7 +25,7 @@
             }
 
             button,span {
-                font-size: 24px;
+                font-size: 32px;
                 color: #b8c76f
             }
 
@@ -38,11 +38,11 @@
             }
 
             body {
-                width: 1056px;
+                width: 1408px;
                 //margin: 0 auto 0 auto;
                 //vertical-align: middle;
                 margin: auto;
-                height: 720px
+                height: 940px
             }
 
             canvas,select {
@@ -52,12 +52,12 @@
 
             body,html,select {
                 color: #b8c76f;
-                font-size: 24px
+                font-size: 32px
             }
 
             select {
                 font-family: 'C64 User Mono',sans-serif;
-                width: 212px;
+                width: 282px;
                 text-align-last: center;
                 outline: 0
             }
@@ -73,11 +73,13 @@
             }
 
             canvas {
+            	  width: 1344px;
+            	  height: 512px;
                 z-index: 0
             }
 
             input[type=range] {
-                width: 230px
+                width: 306px
             }
 
             .crt::before {
@@ -87,7 +89,7 @@
                 z-index: 2;
                 background-size: 100% 2px,4px 100%;
                 pointer-events: none;
-                animation: blinker .08s step-end infinite
+                animation: flicker .08s step-end infinite
             }
         </style>
         <title>Spectrograph</title>
@@ -102,9 +104,11 @@
     <canvas width='1008' height='384' id='surface'></canvas>
 </center>
 </br>
-<span id="sss">
+<center>
     <button id="analyze" onclick="letsgo(this)">&nbsp;Start&nbsp;</button>
-</br></br></span>Profile: 
+</br></br>Profile: 
+
+
 <select id="profile" name="profile" onchange="setProf(profile.value)">
     <option value="[100,250,1.3,-85]">Default</option>
     <option selected value="[70,200,1.5,-85]">Zibri</option>
@@ -123,21 +127,20 @@
 <output name="k" id="k" for="rangeInput3">1.3</output>
 </br>N &nbsp;<input type="range" id="rangeInput4" name="rangeInput4" min="50" max="130" value="85" oninput="n.value=(0-rangeInput4.value).toString().padStart(4,'&nbsp;')">
 <output name="n" id="n" for="rangeInput4">-85</output>
+</center>
 <script>
+
     pqs = function() {
         var str = window.location.search;
         var objURL = {};
-
         str.replace(new RegExp("([^?=&]+)(=([^&]*))?","g"), function($0, $1, $2, $3) {
             objURL[$1] = $3;
         });
         return objURL;
     }
-
     if ('nosl'in pqs()) {
         document.documentElement.className = "";
     }
-
     setProf = function(p) {
         pr = JSON.parse(p);
         rangeInput.value = pr[0];
@@ -150,27 +153,24 @@
         rangeInput4.oninput();
     }
     setProf("[70,200,1.5,-85]");
-
     letsgo = function() {
         if ("undefined" == typeof window.event)
             mic = true;
         else
-            mic = !(window.event.ctrlKey);
+            mic = !(window.event.ctrlKey||window.event.shiftKey);
         //console.log(window.event);
-        document.documentElement.webkitRequestFullScreen();
+        if (document.documentElement.clientWidth!=screen.width || document.documentElement.clientHeight!=screen.height) document.documentElement.webkitRequestFullScreen();
         //screen.orientation.lock('landscape');
         //document.getElementById("sss").style = "display:none";
         document.getElementById("analyze").innerHTML = "&nbsp;Quit&nbsp;"
         document.getElementById("analyze").onclick = window.location.reload.bind(window.location);
-        document.getElementById("surface").style = "display:block";
+        //document.getElementById("surface").style = "display:block";
         if (mic)
             fixit = 16;
         else
             fixit = 0;
-
         fixit = 20;
         // test
-
         let constraints = {
             audio: {
                 echoCancellation: false,
@@ -182,10 +182,8 @@
                 googHighpassFilter: false
             }
         };
-
         let fftSize = 2048;
         // minimum 512
-
         processStream = function(stream) {
             window.microphone = context.createMediaStreamSource(stream);
             var analyser = context.createAnalyser();
@@ -196,13 +194,11 @@
             var canvas = document.getElementById('surface')
               , ctx = canvas.getContext('2d');
             convertToMono(microphone).connect(analyser);
-
             function process() {
                 analyser.minDecibels = n.value;
                 //-85;
                 analyser.maxDecibels = analyser.minDecibels + 50;
                 analyser.getByteFrequencyData(buffer);
-
                 if (!paused) {
                     ctx.drawImage(canvas, -1, 0);
                     for (var i = 800; i > fixit; i--) {
@@ -212,9 +208,7 @@
                     }
                 }
                 window.requestAnimationFrame(process);
-
             }
-
             canvas.onclick = function() {
                 paused = !paused;
             }
@@ -225,7 +219,6 @@
             var err = function() {
                 console.log('Error');
             }
-
                 if (navigator.webkitGetUserMedia)
                     navigator.webkitGetUserMedia(constraints, processStream, err);
                 else
