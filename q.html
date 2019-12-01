@@ -6,7 +6,7 @@
         <style disabled>
             @keyframes flicker {
                 50% {
-                    top: -3px
+                    top: -3px;
                 }
             }
 
@@ -20,7 +20,6 @@
 
             body,button,span {
                 font-family: 'C64 User Mono',sans-serif;
-                //background-color: #000;
                 background-color: #20398d
             }
 
@@ -75,7 +74,6 @@
             canvas {
             	  width: 1344px;
             	  height: 512px;
-                z-index: 0
             }
 
             input[type=range] {
@@ -84,13 +82,14 @@
 
             .crt::before {
                 content: " ";
+                //filter: drop-shadow(1px 1px 2px black) invert(1%);
+                filter: contrast(80%);
                 display: block;
                 background: linear-gradient(rgba(18,16,16,0) 50%,rgba(0,0,0,.5) 50%),linear-gradient(90deg,rgba(255,0,0,.1),rgba(0,255,0,.05),rgba(0,0,255,.1),rgba(0,0,0,.2));
                 z-index: 2;
                 background-size: 100% 4px,3px 100%;
                 pointer-events: none;
-                filter: contrast(80%);
-                animation: flicker .08s step-end infinite
+                animation: flicker .04s step-end infinite
             }
         </style>
         <title>Spectrograph</title>
@@ -116,9 +115,9 @@
     <option value="[70,200,1.4,-85]">Zibri 2</option>
     <option value="[0,0,1,-85]">B/W</option>
     <option value="[100,220,4,-85]">Electric</option>
-    <option value="[50,220,1.8,-85]">Boh</option>
-    <option value="[50,300,2.2,-85]">Boh 2</option>
-    <option value="[60,250,1.25,-85]">Boh 3</option>
+    <option value="[50,220,1.8,-85]">Pink</option>
+    <option value="[50,300,2.2,-85]">Red</option>
+    <option value="[60,250,1.25,-85]">Purple</option>
 </select>
 </br></br>S &nbsp;<input type="range" id="rangeInput" name="rangeInput" min="0" max="100" value="100" oninput="sat.value=rangeInput.value.toString().padStart(4,'&nbsp;')">
 <output name="sat" id="sat" for="rangeInput">100</output>
@@ -154,24 +153,25 @@
         rangeInput4.oninput();
     }
     setProf("[70,200,1.5,-85]");
+            var canvas = document.getElementById('surface')
+              , ctx = canvas.getContext('2d');
+ctx.font = "24px C64 User Mono";
+ctx.fillStyle = "#b8c76f";
+ctx.fillText("Welcome to my first demo.", 24*8, 48);
+ctx.fillText("This page is just a spectrograph.", 24*5, 48*2);
+ctx.fillText("Now click start, relax and enjoy!", 24*5, 48*4);
+ctx.fillText("Namaste!", 24*17, 48*6);
+ctx.fillText("Zibri.", 24*18, 48*7);
     letsgo = function() {
-        if ("undefined" == typeof window.event)
             mic = true;
-        else
-            mic = !(window.event.ctrlKey||window.event.shiftKey);
-        //console.log(window.event);
         if (document.documentElement.clientWidth!=screen.width || document.documentElement.clientHeight!=screen.height) document.documentElement.webkitRequestFullScreen();
-        //screen.orientation.lock('landscape');
-        //document.getElementById("sss").style = "display:none";
         document.getElementById("analyze").innerHTML = "&nbsp;Quit&nbsp;"
         document.getElementById("analyze").onclick = window.location.reload.bind(window.location);
-        //document.getElementById("surface").style = "display:block";
         if (mic)
             fixit = 16;
         else
             fixit = 0;
         fixit = 20;
-        // test
         let constraints = {
             audio: {
                 echoCancellation: false,
@@ -186,7 +186,10 @@
         let fftSize = 2048;
         // minimum 512
         processStream = function(stream) {
-            window.microphone = context.createMediaStreamSource(stream);
+            if (mic)
+                window.microphone = context.createMediaStreamSource(stream);
+            else
+                window.microphone = stream;
             var analyser = context.createAnalyser();
             analyser.smoothingTimeConstant = 0.0;
             analyser.fftSize = fftSize;
@@ -195,11 +198,19 @@
             var canvas = document.getElementById('surface')
               , ctx = canvas.getContext('2d');
             convertToMono(microphone).connect(analyser);
+                        ctx.fillStyle = "#000000";
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+            var fc = 0, fe = 1000;
             function process() {
                 analyser.minDecibels = n.value;
-                //-85;
                 analyser.maxDecibels = analyser.minDecibels + 50;
                 analyser.getByteFrequencyData(buffer);
+                var t = (buffer[627]|buffer[628]);
+                if (t>80) fc++;
+                if ((fc>1000) && (t==0)) {
+                	fe--;
+                }
+                if (fe==0) window.location.reload(false);
                 if (!paused) {
                     ctx.drawImage(canvas, -1, 0);
                     for (var i = 800; i > fixit; i--) {
