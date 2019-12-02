@@ -166,7 +166,7 @@
         if (document.documentElement.clientWidth != screen.width || document.documentElement.clientHeight != screen.height)
             document.documentElement.webkitRequestFullScreen();
         document.getElementById("analyze").innerHTML = "&nbsp;Quit&nbsp;"
-        document.getElementById("analyze").onclick = window.location.reload.bind(window.location);
+        document.getElementById("analyze").onclick = ()=>window.location.href=window.location.href;
 
         fixit = 20;
 
