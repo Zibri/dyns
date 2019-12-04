@@ -121,14 +121,14 @@ transition: opacity 1.7s, background-color 1.7s, color 1.7s;
     <button id="analyze" onclick="letsgo(this)">&nbsp;Start&nbsp;</button>
 </br></br>Profile: 
 <select id="profile" name="profile" onchange="setProf(profile.value)">
-    <option value="[100,250,1.3,-85]">Default</option>
-    <option selected value="[70,200,1.5,-85]">Zibri</option>
-    <option value="[70,200,1.4,-85]">Zibri 2</option>
-    <option value="[0,0,1,-85]">B/W</option>
-    <option value="[100,220,4,-85]">Electric</option>
-    <option value="[50,220,1.8,-85]">Pink</option>
-    <option value="[50,300,2.2,-85]">Red</option>
-    <option value="[60,250,1.25,-85]">Purple</option>
+    <option value="[100,250,1.3,-95]">Default</option>
+    <option selected value="[70,200,1.5,-95]">Zibri</option>
+    <option value="[70,200,1.4,-95]">Zibri 2</option>
+    <option value="[0,0,1,-95]">B/W</option>
+    <option value="[100,220,4,-95]">Electric</option>
+    <option value="[50,220,1.8,-95]">Pink</option>
+    <option value="[50,300,2.2,-95]">Red</option>
+    <option value="[60,250,1.25,-95]">Purple</option>
 </select>
 </br></br>S &nbsp;<input type="range" id="rangeInput" name="rangeInput" min="0" max="100" value="100" oninput="sat.value=rangeInput.value.toString().padStart(4,'&nbsp;')">
 <output name="sat" id="sat" for="rangeInput">100</output>
@@ -137,7 +137,7 @@ transition: opacity 1.7s, background-color 1.7s, color 1.7s;
 </br>K &nbsp;<input type="range" id="rangeInput3" name="rangeInput3" min="70" max="400" value="130" oninput="k.value=(rangeInput3.value/100).toString().padStart(4,'&nbsp;')">
 <output name="k" id="k" for="rangeInput3">1.3</output>
 </br>N &nbsp;<input type="range" id="rangeInput4" name="rangeInput4" min="50" max="130" value="85" oninput="n.value=(0-rangeInput4.value).toString().padStart(4,'&nbsp;')">
-<output name="n" id="n" for="rangeInput4">-85</output>
+<output name="n" id="n" for="rangeInput4">-95</output>
 </center><script>
 
     pqs = function() {
@@ -167,7 +167,7 @@ transition: opacity 1.7s, background-color 1.7s, color 1.7s;
         rangeInput3.oninput();
         rangeInput4.oninput();
     }
-    setProf("[70,200,1.5,-85]");
+    setProf("[70,200,1.5,-95]");
 
     letsgo = function() {
 
