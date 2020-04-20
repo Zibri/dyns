@@ -223,13 +223,15 @@ transition: opacity 1.7s, background-color 1.7s, color 1.7s;
                 //var hb = buffer.slice(buffer.length/2, buffer.length);
                 //console.log(Math.max(...hb));
                 var t = (buffer[627/(2048 / fftSize)] | buffer[628/(2048 / fftSize)]);
+/*
                 if (t > 80)
                     fc++;
                 if ((fc > 1000) && (t == 0)) {
                     fe--;
                 }
-                if (fc == 2160) {document.documentElement.style.backgroundColor="black";document.documentElement.style.color="black";document.body.style.backgroundColor="black";document.body.style.opacity=0;}//document.documentElement.classList.toggle("fade");
-                if (fc == 2240) modern();
+*/
+//                if (fc == 2160) {document.documentElement.style.backgroundColor="black";document.documentElement.style.color="black";document.body.style.backgroundColor="black";document.body.style.opacity=0;}//document.documentElement.classList.toggle("fade");
+//                if (fc == 2240) modern();
 //                if (fc == 2030) document.documentElement.classList.toggle("fade");
                 if (fe == 0)
                     window.location.reload(false);
