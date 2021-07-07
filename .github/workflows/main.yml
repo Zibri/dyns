@@ -13,7 +13,7 @@ jobs:
   
   build:
     name: Build
-    runs-on: self-hosted
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
@@ -27,7 +27,7 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v2
         with:
-          repository: 'https://github.com/VICE-Team/svn-mirror'
+          repository: 'VICE-Team/svn-mirror'
 
       - name: Download Documentation
         uses: actions/download-artifact@v2
