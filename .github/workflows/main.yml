@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Buil Vice Latest Locally
+name: Build Vice Latest Locally
 
 # Controls when the workflow will run
 on:
@@ -27,7 +27,7 @@ jobs:
       - name: Checkout Source
         uses: actions/checkout@v2
         with:
-          repository: 'VICE-Team/svn-mirror'
+          repository: 'https://github.com/VICE-Team/svn-mirror'
 
       - name: Download Documentation
         uses: actions/download-artifact@v2
