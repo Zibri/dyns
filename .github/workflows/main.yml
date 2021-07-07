@@ -26,11 +26,9 @@ jobs:
         shell: bash
 
       - name: Checkout Source
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         with:
-    # Repository name with owner. For example, actions/checkout
-    # Default: ${{ github.repository }}
-         repository: 'https://github.com/VICE-Team/svn-mirror'
+          repository: 'https://github.com/VICE-Team/svn-mirror'
 
       - name: Download Documentation
         uses: actions/download-artifact@v2
