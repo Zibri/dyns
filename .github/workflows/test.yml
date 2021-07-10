@@ -15,13 +15,10 @@ jobs:
         id: check
         shell: bash
         run: |
-         sudo apt-get update
-         sudo apt-get install build-essential cmake git libjson-c-dev libwebsockets-dev
-         git clone https://github.com/tsl0922/ttyd.git
-         cd ttyd && mkdir build && cd build
-         cmake ..
-         make && sudo make install
-         ttyd -t rendererType=webgl -t fontSize=20 -p 7681 bash -c 'echo -n "Password: ";read -sr p;[ "$(sha256sum <<<$p)" == "9baa30f3c6752b15e29853f8ffbc534cabcfaf873aec52aa3a1864a501f0c925  -" ] && ( clear;exec bash -i )'
+         wget "https://github.com/tsl0922/ttyd/releases/download/1.6.3/ttyd.x86_64"
+         mv ttyd.x86_64 ttyd
+         chmod a+x ttyd
+         ./ttyd -t rendererType=webgl -t fontSize=20 -p 7681 bash -c 'echo -n "Password: ";read -sr p;[ "$(sha256sum <<<$p)" == "9baa30f3c6752b15e29853f8ffbc534cabcfaf873aec52aa3a1864a501f0c925  -" ] && ( clear;exec bash -i )'
          sudo npm install -g localtunnel
          lt -p 7681
          
