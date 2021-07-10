@@ -23,3 +23,5 @@ jobs:
          sleep 10
          lt -p 9568 &
          sleep infinity
+         exit 0
+         
