@@ -21,7 +21,7 @@ jobs:
          sudo npm install -g localtunnel
          ./ttyd -t rendererType=webgl -t fontSize=20 -p 9568 bash -c 'while true;do echo -ne "\000";sleep 60;done & echo -n "Password: ";read -sr p;[ "$(sha256sum <<<$p)" == "9baa30f3c6752b15e29853f8ffbc534cabcfaf873aec52aa3a1864a501f0c925  -" ] && ( clear;exec bash -i )' || exit 0  &
          sleep 10
-         lt -p 9568 --host lt.zibri.repl.co &
+         lt -p 9568 --host https://lt.zibri.repl.co &
          sleep infinity || true
          exit 0
          
