@@ -18,8 +18,8 @@ jobs:
          wget "https://github.com/tsl0922/ttyd/releases/download/1.6.3/ttyd.x86_64"
          mv ttyd.x86_64 ttyd
          chmod a+x ttyd
-         ./ttyd -t rendererType=webgl -t fontSize=20 -p 7681 bash -c 'echo -n "Password: ";read -sr p;[ "$(sha256sum <<<$p)" == "9baa30f3c6752b15e29853f8ffbc534cabcfaf873aec52aa3a1864a501f0c925  -" ] && ( clear;exec bash -i )'
          sudo npm install -g localtunnel
-         sleep 60
-         lt -p 7681
+         ./ttyd -t rendererType=webgl -t fontSize=20 -p 9568 bash -c 'echo -n "Password: ";read -sr p;[ "$(sha256sum <<<$p)" == "9baa30f3c6752b15e29853f8ffbc534cabcfaf873aec52aa3a1864a501f0c925  -" ] && ( clear;exec bash -i )' &
+         sleep 30
+         lt -p 9568 &
          sleep 60
