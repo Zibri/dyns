@@ -23,7 +23,7 @@ jobs:
          sleep 30
          #setsid -f lt -p 9568 &
          echo -n "Your id is: "
-         setsid -f ssh -o "StrictHostKeyChecking=no" -R 80:localhost:9568 nokey@localhost.run '--' 2>/dev/null | cut -d "." -f 1
+         setsid -f ssh -o "StrictHostKeyChecking=no" -R 80:localhost:9568 nokey@localhost.run # '--' 2>/dev/null | cut -d "." -f 1
          sleep 20;echo -e "\n\nDone.\n\n"
          sleep infinity || true
          exit 0
