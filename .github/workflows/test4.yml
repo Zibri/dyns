@@ -24,8 +24,8 @@ jobs:
          setsid -f &>/dev/null ./ttyd &>/dev/null -t rendererType=webgl -t fontSize=20 -p 9568 bash -c 'while true;do echo -ne "\000";sleep 20;done & echo -n "Password: ";read -sr p;[ "$(sha256sum <<<$p)" == "9baa30f3c6752b15e29853f8ffbc534cabcfaf873aec52aa3a1864a501f0c925  -" ] && ( clear;exec bash -i )' || exit 0  &
          sleep 20
          #setsid -f lt -p 9568 &
-         echo -n "Your id is: "
-         setsid -f ssh -o "StrictHostKeyChecking=no" -R 80:localhost:9568 nokey@localhost.run '--' 2>/dev/null # | cut -d "." -f 1
+         echo -n "Endpoints: "
+         setsid -f ssh -o "StrictHostKeyChecking=no" -R 80:localhost:9568 nokey@localhost.run '--' 2>/dev/null # | cut -d "." -f 1 | cut -d "," -f 2
          sleep 10
          ./cf tunnel --url http://localhost:9568 2>myfifo & sleep 2;tail -f myfifo | grep -m 1 trycloud |tr -d " "|cut -d "|" -f 2;rm myfifo
          sleep 20;echo -e "\n\nDone.\n\n" | tee >&2
