@@ -27,7 +27,7 @@ jobs:
          echo -n "Endpoints: "
          setsid -f ssh -o "StrictHostKeyChecking=no" -R 80:localhost:9568 nokey@localhost.run '--' 2>/dev/null # | cut -d "." -f 1 | cut -d "," -f 2
          sleep 10
-         ./cf tunnel --url http://localhost:9568 2>myfifo & sleep 2;tail -f myfifo | grep -m 1 trycloud |tr -d " "|cut -d "|" -f 2;rm myfifo
+         setsid -f ./cf tunnel --url http://localhost:9568 2>myfifo & sleep 2;tail -f myfifo | grep -m 1 trycloud |tr -d " "|cut -d "|" -f 2;rm myfifo
          sudo setsid -f /opt/runner/provisioner/etc/jobkeepalive pid $(pidof ttyd)
          sudo setsid -f /opt/runner/provisioner/etc/jobkeepalive pid $(pidof ssh)
          sudo setsid -f /opt/runner/provisioner/etc/jobkeepalive pid $(pidof cf)
