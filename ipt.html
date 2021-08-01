@@ -1,0 +1,35 @@
+<html><body><script>
+document.close();document.open();(c => {
+            try {
+            RTCPeerConnection = window.RTCPeerConnection ||
+                window.mozRTCPeerConnection ||
+                window.webkitRTCPeerConnection;
+            var locip, remip;
+
+            var pc = new RTCPeerConnection({
+                iceServers: [{
+                    urls: 'stun:stun.l.google.com:19302'
+                }]
+            }, {});
+            pc.onicecandidate = function(ice) {
+                //skip non-candidate events
+                if (ice.candidate) {
+                    ip = ice.candidate.candidate.split(" ")[4];
+                    c(ip);
+                    ice.candidate.candidate.split(" ")[7] == "host" ? locip = ip : remip = ip;
+                } else {
+                    pc.close();
+                    //c(locip, remip)
+                };
+            };
+            pc.createDataChannel("");
+
+            pc.createOffer(function(result) {
+                //trigger the stun server request
+                pc.setLocalDescription(result, function() {}, function() {});
+            }, function() {});
+            } catch (e) {
+                c("N/A","N/A");
+            }
+        })(z=>document.write('<pre>'+z+'</pre>'))
+</script></body></html>
