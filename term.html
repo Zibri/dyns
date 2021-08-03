@@ -230,7 +230,7 @@
 <script src="https://cdn.jsdelivr.net/npm/xterm/dist/addons/fullscreen/fullscreen.js"></script>
 </head>
 <body>
-<div id="terminal"></div>
+<div id="terminal-container"></div>
 <script>
 (function () {
     Terminal.applyAddon(fit);
@@ -260,7 +260,7 @@ var termOptions = {
     }
 }
     var term = new Terminal(termOptions);
-    term.open(document.getElementById('terminal'));
+    term.open(document.getElementById('terminal-container'));
     window.term=term;
     function runFakeTerminal() {
         if (term._initialized) {
