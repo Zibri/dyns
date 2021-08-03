@@ -1,22 +1,25 @@
 <html>
 <head>
             <style>
-            html, body {
+            body,html {
                 height: 100%;
-                width: 100%;
-                margin: 0px;
-                overflow: hidden;
+                margin: 0;
+                min-height: 100%;
+                overflow: hidden
             }
 
-            #terminal {
-                display: block;
-                position: relative;
-                width: 100%;
+            #terminal-container {
                 height: 100%;
-                margin: 0px;
-                overflow: hidden;
+                margin: 0 auto;
+                padding: 0;
+                width: auto
             }
-        </style>
+
+            #terminal-container .terminal {
+                height: calc(100% - 10px);
+                padding: 5px
+            }
+            </style>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/dist/xterm.css" />
 <script src="https://cdn.jsdelivr.net/npm/xterm/dist/xterm.js"></script>
