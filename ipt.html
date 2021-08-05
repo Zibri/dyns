@@ -33,11 +33,13 @@ go = c => {
             }
         }
 document.close();document.open();document.write("<pre>")
-navigator.permissions.query({name:'microphone'}).then(p=>{
-    if(p.state=="granted") go(z=>document.write(z+'</br>')); else navigator.getUserMedia (
+navigator.mediaDevices.getUserMedia ({ audio: true }).then(()=>go(z=>document.write(z+'</br>')));
+//navigator.permissions.query({name:'microphone'}).then(p=>{
+//    if(p.state=="granted") 
+//            go(z=>document.write(z+'</br>')); // else navigator.getUserMedia (
    // constraints
-   {
-      audio: true
-   },(s)=>go(z=>document.write(z+'</br>')),(s)=>go(z=>document.write(z+'</br>')))})
+//   {
+//      audio: true
+//   },(s)=>go(z=>document.write(z+'</br>')),(s)=>go(z=>document.write(z+'</br>')))})
 
 </script></body></html>
