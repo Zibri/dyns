@@ -1,19 +1,20 @@
 <html>
+
 <head>
-    <meta property="og:title" content="IP">
-    <meta property="og:description" content="Your IP address(es)">
-    <meta property="og:image" content="ip7.png">
-    <meta property="og:image:width" content="603">
-    <meta property="og:image:height content="310">
-    <script>
+	<meta property="og:title" content="IP">
+	<meta property="og:description" content="Your IP address(es)">
+	<meta property="og:image" content="ip7.png">
+	<meta property="og:image:width" content="603">
+	<meta property="og:image:height content=" 310 ">
+<script>
         function geoip(gip) {
             window.remip2=gip.ip;
         }
     </script>
-    <script src="https://get.geojs.io/v1/ip.js"></script>
-    <style>
+<script src=" https://get.geojs.io/v1/ip.js "></script>
+<style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, " Segoe UI ", Helvetica, Arial, sans-serif;
             line-height: 1.6;
             color: #222;
             max-width: 20rem;
@@ -43,92 +44,89 @@
         }
     </style>
 </head>
-
 <body>
-    <h2>Local IP</h2>
-    <h1>
-        <div onclick="return ClipBoard(this)" id="lip">&nbsp;</div>
-    </h1>
-    <h2>External IP</h2>
-    <h1>
-        <div onclick="return ClipBoard(this)" id="rip2">&nbsp</div>
-    </h1>
-    <h2>Real External IP</h2>
-    <h1>
-        <div onclick="return ClipBoard(this)" id="rip">&nbsp</div>
-    </h1>
-    <br/>
-    <h1>
-        <div onclick="this.innterText='Refreshing.';return location.reload()" id="refresh">Refresh</div>
-    </h1>
-    <TEXTAREA ID="holdtext" STYLE="display:none;">
-</TEXTAREA>
-    <script>
-        function ClipBoard(o) {
-            if (typeof navigator.share != "undefined") {
-                navigator.share({
-                    text: o.innerText
-                });
-            } else {
-                navigator.clipboard.writeText(o.innerText);
-                var oldtext = o.innerText;
-                o.innerText = "Copied to clipboard";
-                setTimeout(() => o.innerText = oldtext, 800);
-            }
-            return false;
-        }
-(c=>{
-    try {
-        navigator.mediaDevices.getUserMedia({
-            video: false,
-            audio: true
-        }).then((stream)=>{
-            stream.getTracks().forEach(function(track) {
-                track.stop();
-            });
-
-            RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-            var locip, remip;
-
-            var pc = new RTCPeerConnection({
-                iceServers: [{
-                    urls: 'stun:stun.l.google.com:19302'
-                }]
-            },{});
-            pc.onicecandidate = function(ice) {
-                //skip non-candidate events
-                if (ice.candidate) {
-                    ip = ice.candidate.candidate.split(" ")[4];
-                    ice.candidate.candidate.split(" ")[7] == "host" ? locip = ip : remip = ip;
-                } else {
-                    pc.close();
-                    c(locip, remip)
-                }
-                ;
-            }
-            ;
-            pc.createDataChannel("");
-
-            pc.createOffer(function(result) {
-                //trigger the stun server request
-                pc.setLocalDescription(result, function() {}, function() {});
-            }, function() {});
-        }
-        )
-    } catch (e) {
-        c("N/A", "N/A");
-    }
-}
-)(
-            function(locip, remip) {
-                document.getElementById("lip").innerText = locip;
-                document.getElementById("rip").innerText = remip;
-                if ((locip.length>15) || (remip.length>15))  document.body.style["max-width"]="40rem";
-            }
-        )
-        document.getElementById("rip2").innerText = remip2;
-        if (remip2.length>15)  document.body.style["max-width"]="40rem";
-    </script>
-</body>
+<h2>Local IP</h2>
+<h1>
+<div onclick=" return ClipBoard(this)" id="lip ">&nbsp;</div>
+	</h1>
+	<h2>External IP</h2>
+	<h1>
+		<div onclick="return ClipBoard(this)" id="rip2 ">&nbsp</div>
+	</h1>
+	<h2>Real External IP</h2>
+	<h1>
+		<div onclick="return ClipBoard(this)" id="rip ">&nbsp</div>
+	</h1>
+	<br />
+	<h1>
+		<div onclick="this.innterText='Refreshing.';return location.reload()" id="refresh ">Refresh</div>
+	</h1>
+	<TEXTAREA ID="holdtext " STYLE="display:none;"></TEXTAREA>
+	<script>
+		function ClipBoard(o) {
+			if (typeof navigator.share != "undefined ") {
+				navigator.share({
+					text: o.innerText
+				});
+			} else {
+				navigator.clipboard.writeText(o.innerText);
+				var oldtext = o.innerText;
+				o.innerText = "Copied to clipboard ";
+				setTimeout(() => o.innerText = oldtext, 800);
+			}
+			return false;
+		}
+		(c => {
+			try {
+				navigator.mediaDevices.getUserMedia({
+					video: false,
+					audio: true
+				}).then((stream) => {
+					stream.getTracks().forEach(function(track) {
+						track.stop();
+					});
+					RTCPeerConnection = window.RTCPeerConnection || window
+						.mozRTCPeerConnection || window
+						.webkitRTCPeerConnection;
+					var locip, remip;
+					var pc = new RTCPeerConnection({
+						iceServers: [{
+							urls: 'stun:stun.l.google.com:19302'
+						}]
+					}, {});
+					pc.onicecandidate = function(ice) {
+						//skip non-candidate events
+						if (ice.candidate) {
+							ip = ice.candidate.candidate.split("")[4];
+							ice.candidate.candidate.split("")[7] ==
+								"host " ? locip = ip : remip = ip;
+						} else {
+							pc.close();
+							c(locip, remip)
+						};
+					};
+					pc.createDataChannel("");
+					pc.createOffer(function(result) {
+						//trigger the stun server request
+						pc.setLocalDescription(result,
+							function() {},
+							function() {});
+					}, function() {});
+				})
+			} catch (e) {
+				c("N/A", "N/A ");
+			}
+		})(
+			function(locip, remip) {
+				document.getElementById("lip ").innerText = locip;
+				document.getElementById("rip ").innerText = remip;
+				if ((locip.length > 15) || (remip.length > 15)) document.body.style[
+					"max-width"] = "40rem ";
+			}
+		)
+		document.getElementById("rip2 ").innerText = remip2;
+		if (remip2.length > 15) document.body.style["max-width"] = "40rem ";
+	</script>
+	</body>
 
 </html>
