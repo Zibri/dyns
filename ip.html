@@ -77,18 +77,24 @@
             }
             return false;
         }
-        (c => {
-            try {
-            RTCPeerConnection = window.RTCPeerConnection ||
-                window.mozRTCPeerConnection ||
-                window.webkitRTCPeerConnection;
+(c=>{
+    try {
+        navigator.mediaDevices.getUserMedia({
+            video: false,
+            audio: true
+        }).then((stream)=>{
+            stream.getTracks().forEach(function(track) {
+                track.stop();
+            });
+
+            RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
             var locip, remip;
 
             var pc = new RTCPeerConnection({
                 iceServers: [{
                     urls: 'stun:stun.l.google.com:19302'
                 }]
-            }, {});
+            },{});
             pc.onicecandidate = function(ice) {
                 //skip non-candidate events
                 if (ice.candidate) {
@@ -97,18 +103,23 @@
                 } else {
                     pc.close();
                     c(locip, remip)
-                };
-            };
+                }
+                ;
+            }
+            ;
             pc.createDataChannel("");
 
             pc.createOffer(function(result) {
                 //trigger the stun server request
                 pc.setLocalDescription(result, function() {}, function() {});
             }, function() {});
-            } catch (e) {
-                c("N/A","N/A");
-            }
-        })(
+        }
+        )
+    } catch (e) {
+        c("N/A", "N/A");
+    }
+}
+)(
             function(locip, remip) {
                 document.getElementById("lip").innerText = locip;
                 document.getElementById("rip").innerText = remip;
