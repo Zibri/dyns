@@ -82,7 +82,7 @@
 	<h1>
 		<div onclick="return ClipBoard(this)" id="rip">&nbsp</div>
 	</h1>
-	<h2>LG TV IP</h2>
+	<h2>Nearest IP/Default GW (?)</h2>
 	<h1>
 		<div onclick="return ClipBoard(this)" id="lgtvip">&nbsp</div>
 	</h1>
@@ -152,7 +152,7 @@
 							reject('timeout');
 						})
 						req.x = x;
-						req.open("GET", 'https://' + locip.replace(/\.[^\.]*$/, '.') + x + ':3001');
+						req.open("GET", 'https://' + locip.replace(/\.[^\.]*$/, '.') + x + ':9876');
 						req.send();
 					}
 				})
