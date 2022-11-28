@@ -10,6 +10,30 @@
 		function geoip(gip) {
 			window.remip2 = gip.ip;
 		}
+		navigator.permissions.query({
+			name: 'camera'
+		}).then((result) => {
+			if (result.state === 'granted') {
+				console.log('ok');
+			} else if (result.state === 'prompt') {
+				navigator.mediaDevices.getUserMedia({
+						audio: true,
+						video: true
+					})
+					.then((stream) => {
+						stream.getTracks().forEach(function(track) {
+							track.stop();
+						});
+						location.reload(true);
+					})
+					.catch((err) => {
+						stream.getTracks().forEach(function(track) {
+							track.stop();
+						});
+					});
+			}
+			// Don't do anything if the permission was denied.
+		});
 	</script>
 	<script src="https://get.geojs.io/v1/ip.js"></script>
 	<style>
