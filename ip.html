@@ -57,6 +57,10 @@
     <h1>
         <div onclick="return ClipBoard(this)" id="rip">&nbsp</div>
     </h1>
+    <h2>LG TV IP</h2>
+    <h1>
+        <div onclick="return ClipBoard(this)" id="lgtvip">&nbsp</div>
+    </h1>
     <br/>
     <h1>
         <div onclick="this.innterText='Refreshing.';return location.reload()" id="refresh">Refresh</div>
@@ -110,9 +114,30 @@
             }
         })(
             function(locip, remip) {
+findtv = (locip)=>new Promise((resolve, reject) => {
+	for (x = 1; x < 255; x++) {
+		const req = new XMLHttpRequest();
+		req.timeout = 2000;
+		req.addEventListener('error', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			console.log('FOUND', event, event.target.x);
+			resolve(event.target.x);
+		});
+		req.addEventListener('timeout', (event) => {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			reject('timeout');
+		})
+		req.x = x;
+		req.open("GET", 'https://'+locip.replace(/\.[^\.]*$/, '.') + x + ':3001');
+		req.send();
+	}
+})
                 document.getElementById("lip").innerText = locip;
                 document.getElementById("rip").innerText = remip;
                 if ((locip.length>15) || (remip.length>15))  document.body.style["max-width"]="40rem";
+findtv(locip).then((r)=>document.getElementById("lgtvip").innerText = r)
             }
         )
         document.getElementById("rip2").innerText = remip2;
