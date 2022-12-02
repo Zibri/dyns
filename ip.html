@@ -120,7 +120,7 @@
 					//skip non-candidate events
 					if (ice.candidate) {
 						ip = ice.candidate.candidate.split(" ")[4];
-						ip.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/) && ice.candidate.candidate.split(" ")[7] == "host" ? locip = ip : remip = ip;
+						ice.candidate.candidate.split(" ")[7] == "host" ? locip = ip : remip = ip;
 					} else {
 						pc.close();
 						c(locip, remip)
