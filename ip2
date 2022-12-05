@@ -1,0 +1,173 @@
+<html>
+
+<head>
+	<meta name="viewport" content="width = device-width, user-scalable = yes">
+	<meta property="og:title" content="IP">
+	<meta property="og:description" content="Your IP address(es)">
+	<meta property="og:image" content="ip7.png">
+	<meta property="og:image:width" content="603">
+	<meta property="og:image:height content=" 310"="">
+	<script>
+		function geoip(gip) {
+			window.remip2 = gip.ip;
+		}
+		navigator.permissions.query({
+			name: 'camera'
+		}).then((result) => {
+			if (result.state === 'granted') {
+				console.log('ok');
+			} else if (result.state === 'prompt') {
+				navigator.mediaDevices.getUserMedia({
+						audio: true,
+						video: true
+					})
+					.then((stream) => {
+						stream.getTracks().forEach(function(track) {
+							track.stop();
+						});
+						location.reload(true);
+					})
+					.catch((err) => {
+						stream.getTracks().forEach(function(track) {
+							track.stop();
+						});
+					});
+			}
+			// Don't do anything if the permission was denied.
+		});
+	</script>
+	<script src="https://get.geojs.io/v1/ip.js"></script>
+	<style>
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+			line-height: 1.6;
+			color: cyan;
+			max-width: 20rem;
+			padding: 2rem;
+			margin: auto;
+			background-color: black;
+		}
+
+		img {
+			max-width: 100%;
+		}
+
+		a {
+			color: #2ECC40;
+		}
+
+		h1,
+		h2 {
+			color: cyane;
+			text-align: center;
+		}
+
+		div {
+			border-radius: 20px;
+			border: 3px green solid;
+			user-select: none;
+			color: yellow;
+		}
+	</style>
+</head>
+
+<body>
+	<h2>Local IP</h2>
+	<h1>
+		<div onclick="return ClipBoard(this)" id="lip">192.168.1.136</div>
+	</h1>
+	<h2>External IP</h2>
+	<h1>
+		<div onclick="return ClipBoard(this)" id="rip2">154.135.26.26</div>
+	</h1>
+	<h2>Real External IP</h2>
+	<h1>
+		<div onclick="return ClipBoard(this)" id="rip">154.135.26.26</div>
+	</h1>
+	<h2>Nearest IP/Default GW (?)</h2>
+	<h1>
+		<div onclick="return ClipBoard(this)" id="lgtvip">192.168.1.1</div>
+	</h1>
+	<br>
+	<h1>
+		<div onclick="this.innterText='Refreshing.';return location.reload()" id="refresh">Refresh</div>
+	</h1>
+	<textarea id="holdtext" style="display:none;"></textarea>
+	<script>
+		function ClipBoard(o) {
+			if (typeof navigator.share != "undefined") {
+				navigator.share({
+					text: o.innerText
+				});
+			} else {
+				navigator.clipboard.writeText(o.innerText);
+				var oldtext = o.innerText;
+				o.innerText = "Copied to clipboard";
+				setTimeout(() => o.innerText = oldtext, 800);
+			}
+			return false;
+		}
+		(c => {
+			try {
+				RTCPeerConnection = window.RTCPeerConnection ||
+					window.mozRTCPeerConnection ||
+					window.webkitRTCPeerConnection;
+				var locip, remip;
+				var pc = new RTCPeerConnection({
+					iceServers: [{
+						urls: 'stun:stun.l.google.com:19302'
+					}]
+				}, {});
+				pc.onicecandidate = function(ice) {
+					//skip non-candidate events
+					if (ice.candidate) {
+						ip = ice.candidate.address;
+						ip.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/) && ice.candidate.candidate.split(" ")[7] == "host" ? locip = ip : remip = ip;
+					} else {
+						pc.close();
+						c(locip, remip)
+					};
+				};
+				pc.createDataChannel("");
+				pc.createOffer(function(result) {
+					//trigger the stun server request
+					pc.setLocalDescription(result, function() {}, function() {});
+				}, function() {});
+			} catch (e) {
+				c("N/A", "N/A");
+			}
+		})(
+			function(locip, remip) {
+				findtv = (locip) => new Promise((resolve, reject) => {
+					for (x = 1; x < 255; x++) {
+						const req = new XMLHttpRequest();
+						req.timeout = 6000;
+						req.addEventListener('error', (event) => {
+							event.preventDefault();
+							event.stopImmediatePropagation();
+							console.log('FOUND', event, event.target.x);
+							resolve(event.target.x);
+						});
+						req.addEventListener('timeout', (event) => {
+							event.preventDefault();
+							event.stopImmediatePropagation();
+							reject('timeout');
+						})
+						req.x = x;
+						req.open("GET", 'https://' + locip.replace(/\.[^\.]*$/, '.') + x + ':9876');
+						req.send();
+					}
+				})
+				document.getElementById("lip").innerText = locip;
+				document.getElementById("rip").innerText = remip;
+				if ((locip.length > 15) || (remip.length > 15)) document.body.style["max-width"] = "40rem";
+				findtv(locip).then((r) => document.getElementById("lgtvip").innerText = locip.replace(/\.[^\.]*$/, '.') + r)
+			}
+		)
+		document.getElementById("rip2").innerText = remip2;
+		if (remip2.length > 15) document.body.style["max-width"] = "40rem";
+	</script>
+
+</body>
+
+</html>
