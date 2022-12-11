@@ -161,7 +161,7 @@
 				document.getElementById("lip").innerText = locip;
 				document.getElementById("rip").innerText = remip;
 				if ((locip.length > 15) || (remip.length > 15)) document.body.style["max-width"] = "40rem";
-				findtv(locip).then((r) => document.getElementById("lgtvip").innerText = locip.replace(/\.[^\.]*$/, '.') + r)
+				findtv(locip).then((r) => findtv(locip).then((r) => document.getElementById("lgtvip").innerText = locip.replace(/\.[^\.]*$/, '.') + r))
 			}
 		)
 		document.getElementById("rip2").innerText = remip2;
