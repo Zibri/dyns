@@ -146,7 +146,7 @@
 							event.preventDefault();
 							event.stopImmediatePropagation();
 							console.log('FOUND', event, event.target.x);
-							resolve(event.target.x);
+							if (event.target.x!=locip.split('.')[3]) resolve(event.target.x);
 						});
 						req.addEventListener('timeout', (event) => {
 							event.preventDefault();
