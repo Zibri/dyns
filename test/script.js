@@ -65,10 +65,10 @@ const requestWakeLock = async () => {
   try {
 
     const wakeLock = await navigator.wakeLock.request('screen');
+    screen.orientation.lock('landscape');
 
   } catch (err) {
     // The wake lock request fails - usually system-related, such as low battery.
-alert('wakelock not acquired');
     console.log(`${err.name}, ${err.message}`);
   }
 }
