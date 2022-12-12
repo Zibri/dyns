@@ -19,7 +19,7 @@ var canvas = document.getElementById("dm_graphs");
 var ctx = canvas.getContext("2d");
 //            ctx.fillStyle = "#000000";
 //            ctx.fillRect(0, 0, canvas.width, canvas.height);
-var graphX = 791;
+var graphX = window.innerWidth-1;
 function updateFancyGraphs(e) {
   var rot = e.rotationRate;
 	var acc = e.acceleration || e.accelerationIncludingGravity;
@@ -51,7 +51,7 @@ function resizeCanvas() {
   var status = document.getElementById("dm_status");
 status.innerText = window.innerWidth+"x"+window.innerHeight;
   var w = window.innerWidth || document.body.offsetWidth;
-//  canvas.width = w;
+  canvas.width = w;
 //  canvas.height=window.innerHeight;
 }
 window.addEventListener("resize", resizeCanvas);
