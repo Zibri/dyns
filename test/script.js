@@ -20,7 +20,7 @@ var ctx = canvas.getContext("2d");
 //            ctx.fillStyle = "#000000";
 //            ctx.fillRect(0, 0, canvas.width, canvas.height);
 function updateFancyGraphs(e) {
-var graphX = window.innerWidth-1;
+var graphX = canvas.width-1;
   var rot = e.rotationRate;
 	var acc = e.acceleration || e.accelerationIncludingGravity;
 
