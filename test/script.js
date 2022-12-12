@@ -19,7 +19,7 @@ var canvas = document.getElementById("dm_graphs");
 var ctx = canvas.getContext("2d");
 //            ctx.fillStyle = "#000000";
 //            ctx.fillRect(0, 0, canvas.width, canvas.height);
-var graphX = canvas.width-1;
+var graphX = window.innerWidth-1;
 function updateFancyGraphs(e) {
 
   var rot = e.rotationRate;
