@@ -97,3 +97,4 @@ function firstClick(e) {
 window.addEventListener("click", firstClick);
 window.addEventListener("touchend", firstClick);
 firstClick(false);
+resizeCanvas();
