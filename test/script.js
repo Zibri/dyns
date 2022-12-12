@@ -51,7 +51,7 @@ function resizeCanvas() {
   var status = document.getElementById("dm_status");
 status.innerText = window.innerWidth+"x"+window.innerHeight;
   var w = window.innerWidth || document.body.offsetWidth;
-  canvas.width = w;
+//  canvas.width = w;
 //  canvas.height=window.innerHeight;
 }
 window.addEventListener("resize", resizeCanvas);
@@ -97,4 +97,3 @@ function firstClick(e) {
 window.addEventListener("click", firstClick);
 window.addEventListener("touchend", firstClick);
 firstClick(false);
-resizeCanvas();
