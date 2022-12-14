@@ -1,32 +1,20 @@
-<!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>CodePen - Rotation Graph 3</title>
-  
-
-</head>
-<body>
-<!-- partial:index.partial.html -->
 <html><head>
 	<title>HTML5 rotation graph</title>
 	<meta name="viewport" content="width=device-width">
 	<style>
-html {
-  height: 100%;
-}
 body {
-  min-height: 100%;
+  min-height: 100ev;
 }
-    body {
+    body,html,canvas {
 		font: 15px sans-serif;
-		height: 1080px;
+		height: 100hv;
+    width: 100%;
 		margin: 0;
 		padding: 0;
 		box-sizing: border-box;
 		background: #889EC5;
 		color: white;
-		overflow-x: hidden;
+		overflow: hidden;
 	}
 	#dm_status, footer {
 		text-align: center;
@@ -45,11 +33,8 @@ body {
 </head><body>
 	<div id="dm_status">Please tap somewhere?</div>
   <div id='fs'>
-	<canvas id="dm_graphs" width='792' height='306' ></canvas>
+	<canvas id="dm_graphs" ></canvas>
   </div>
-</body></html>
-<!-- partial -->
   <script  src="./script.js"></script>
+</body></html>
 
-</body>
-</html>
