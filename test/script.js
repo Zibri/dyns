@@ -59,7 +59,7 @@ function resizeCanvas() {
 }
 window.addEventListener("resize", resizeCanvas);
 //window.addEventListener("deviceorientation", resizeCanvas);
-//resizeCanvas();
+resizeCanvas();
 //
 function gofs(e) {
   canvas.requestFullscreen()
