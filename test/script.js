@@ -95,6 +95,7 @@ function firstClick(e) {
       status.innerText = "" + err;
     }
   }, e);
+resizeCanvas();
 }
 window.addEventListener("click", firstClick);
 //window.addEventListener("touchend", firstClick);
