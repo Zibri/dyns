@@ -99,7 +99,8 @@ resizeCanvas();
 }
 window.addEventListener("click", firstClick);
 //window.addEventListener("touchend", firstClick);
-//firstClick(false);
-ctx.font = "30px Georgia";
-ctx.fillStyle = 'yellow';
-ctx.fillText("Click here to start!", window.innerWidth / 2 - 100, 150);
+firstClick(false);
+//ctx.font = "30px Georgia";
+//ctx.fillStyle = 'yellow';
+//ctx.fillText("Click here to start!", window.innerWidth / 2 - 100, 150);
+window.addEventListener("devicemotion", ()=>gofs());
