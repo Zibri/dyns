@@ -17,7 +17,6 @@ function requestDeviceMotion(callback) {
 //
 var canvas = document.getElementById("dm_graphs");
 var ctx = canvas.getContext("2d");
-
 //            ctx.fillStyle = "#000000";
 //            ctx.fillRect(0, 0, canvas.width, canvas.height);
 //var graphX = window.innerWidth-1;
@@ -60,21 +59,15 @@ function updateFancyGraphs(e) {
 	var rot = e.rotationRate;
 	var gh = canvas.height;
 	var gh2 = gh / 2;
-
 	ctx.drawImage(canvas, -1, 0);
-
 	//  ctx.fillRect(graphX, 0, 2, canvas.height);
 	ctx.fillRect(graphX, 0, 1, canvas.height);
-
-		var size = Math.max(-gh, Math.min( (3 * (rot.alpha + rot.beta + rot.gamma)) * d, gh));
-		
-			ctx.beginPath();
-			ctx.moveTo(graphX - 1, gh2 + ls / 2);
-			ctx.lineTo(graphX, gh2 + size / 2);
-			ctx.stroke();
-			ls = size;
-		
-
+	var size = Math.max(-gh, Math.min((3 * (rot.alpha + rot.beta + rot.gamma)) * d, gh));
+	ctx.beginPath();
+	ctx.moveTo(graphX - 1, gh2 + ls / 2);
+	ctx.lineTo(graphX, gh2 + size / 2);
+	ctx.stroke();
+	ls = size;
 }
 //
 function resizeCanvas() {
@@ -85,9 +78,9 @@ function resizeCanvas() {
 	canvas.width = w / 1.5;
 	canvas.height = window.innerHeight / 1.5;
 	graphX = canvas.width - 1;
-  ctx.lineWidth=1; // 1.75 is nicer lookign but loses a lot of information.
-  ctx.strokeStyle = "Lime";
-  ctx.fillStyle = "black";
+	ctx.lineWidth = 1; // 1.75 is nicer lookign but loses a lot of information.
+	ctx.strokeStyle = "Lime";
+	ctx.fillStyle = "black";
 }
 window.addEventListener("resize", resizeCanvas);
 //window.addEventListener("deviceorientation", resizeCanvas);
@@ -95,6 +88,11 @@ resizeCanvas();
 //
 function gofs(e) {
 	if (document.fullscreenElement != null) {
+		if (t) {
+			window.removeEventListener("devicemotion", updateFancyGraphs);
+		} else {
+			window.addEventListener("devicemotion", updateFancyGraphs);
+		}
 		(t = !t)
 	} else {
 		canvas.requestFullscreen();
