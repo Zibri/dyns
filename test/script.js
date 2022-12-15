@@ -21,9 +21,8 @@ var ctx = canvas.getContext("2d");
 //            ctx.fillRect(0, 0, canvas.width, canvas.height);
 //var graphX = window.innerWidth-1;
 ls = 0;
-t = true;  // true=linegraph false=filledgraph
+t = true; // true=linegraph false=filledgraph
 d = 7; // sesitivity
-
 function updateFancyGraphs(e) {
 	var rot = e.rotationRate;
 	var acc = e.acceleration || e.accelerationIncludingGravity;
@@ -70,17 +69,19 @@ window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 //
 function gofs(e) {
-	canvas.requestFullscreen()
-	const requestWakeLock = async () => {
-		try {
-			const wakeLock = await navigator.wakeLock.request('screen');
-			setTimeout(() => window.screen.orientation.lock("landscape"), 50)
-		} catch (err) {
-			// The wake lock request fails - usually system-related, such as low battery.
-			console.log(`${err.name}, ${err.message}`);
+	!(document.fullscreenElement == null) && (t = !t) || {
+		canvas.requestFullscreen();
+		const requestWakeLock = async () => {
+			try {
+				const wakeLock = await navigator.wakeLock.request('screen');
+				setTimeout(() => window.screen.orientation.lock("landscape"), 50)
+			} catch (err) {
+				// The wake lock request fails - usually system-related, such as low battery.
+				console.log(`${err.name}, ${err.message}`);
+			}
 		}
+		requestWakeLock();
 	}
-	requestWakeLock();
 }
 
 function firstClick(e) {
@@ -94,10 +95,16 @@ function firstClick(e) {
 			window.addEventListener("devicemotion", updateFancyGraphs);
 			el = document.querySelector('#fs');
 			el.addEventListener("click", gofs);
-if (!navigator.userAgentData.mobile) {
-z=setInterval(()=>updateFancyGraphs({ "rotationRate": { "alpha": 7.5-Math.random()*15, "beta": 7.5-Math.random()*15, "gamma": 7.5-Math.random()*15}}),20)
-}
-                } else if (e) {
+			if (!navigator.userAgentData.mobile) {
+				z = setInterval(() => updateFancyGraphs({
+					"rotationRate": {
+						"alpha": 7.5 - Math.random() * 15,
+						"beta": 7.5 - Math.random() * 15,
+						"gamma": 7.5 - Math.random() * 15
+					}
+				}), 20)
+			}
+		} else if (e) {
 			status.innerText = "" + err;
 		}
 	}, e);
