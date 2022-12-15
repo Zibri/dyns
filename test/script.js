@@ -18,6 +18,9 @@ function requestDeviceMotion(callback) {
 var canvas = document.getElementById("dm_graphs");
 var ctx = canvas.getContext("2d");
 ctx.lineWidth=1.75;
+ctx.strokeStyle = "Lime";
+ctx.fillStyle = "black";
+
 //            ctx.fillStyle = "#000000";
 //            ctx.fillRect(0, 0, canvas.width, canvas.height);
 //var graphX = window.innerWidth-1;
@@ -55,9 +58,6 @@ function updateFancyGraphsOld(e) {
 		c = rot.gamma;
 	drawGraph(3 * (a + b + c), "Lime");
 }
-
-			ctx.strokeStyle = "Lime";
-			ctx.fillStyle = "black";
 
 function updateFancyGraphs(e) {
 	var rot = e.rotationRate;
