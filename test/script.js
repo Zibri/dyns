@@ -84,9 +84,10 @@ function firstClick(e) {
 			window.addEventListener("devicemotion", updateFancyGraphs);
 			el = document.querySelector('#fs');
 			el.addEventListener("click", gofs);
-navigator.userAgentData.mobile &&
+if (navigator.userAgentData.mobile) {
 z=setInterval(()=>updateFancyGraphs({ "rotationRate": { "alpha": 7.5-Math.random()*15, "beta": 7.5-Math.random()*15, "gamma": 7.5-Math.random()*15}}),20)
-		} else if (e) {
+}
+                } else if (e) {
 			status.innerText = "" + err;
 		}
 	}, e);
