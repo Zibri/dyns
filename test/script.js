@@ -17,9 +17,6 @@ function requestDeviceMotion(callback) {
 //
 var canvas = document.getElementById("dm_graphs");
 var ctx = canvas.getContext("2d");
-ctx.lineWidth=1.75;
-ctx.strokeStyle = "Lime";
-ctx.fillStyle = "black";
 
 //            ctx.fillStyle = "#000000";
 //            ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -88,6 +85,9 @@ function resizeCanvas() {
 	canvas.width = w / 1.5;
 	canvas.height = window.innerHeight / 1.5;
 	graphX = canvas.width - 1;
+  ctx.lineWidth=1.75;
+  ctx.strokeStyle = "Lime";
+  ctx.fillStyle = "black";
 }
 window.addEventListener("resize", resizeCanvas);
 //window.addEventListener("deviceorientation", resizeCanvas);
