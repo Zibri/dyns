@@ -16,6 +16,24 @@ function requestDeviceMotion(callback) {
 }
 //
 var canvas = document.getElementById("dm_graphs");
+canvas.addEventListener('touchstart', async function(e) {
+	if (e.touches.length > 1) {
+		const blob = await (await fetch(canvas.toDataURL('image/png'))).blob();
+		const filesArray = [
+			new File(
+				[blob],
+				new Date().getTime().toString().substring(6) + '.png', {
+					type: blob.type,
+					lastModified: new Date().getTime()
+				}
+			)
+		];
+		const shareData = {
+			files: filesArray,
+		};
+		navigator.share(shareData);
+	}
+});
 var ctx = canvas.getContext("2d");
 //            ctx.fillStyle = "#000000";
 //            ctx.fillRect(0, 0, canvas.width, canvas.height);
