@@ -24,7 +24,7 @@ ctx.lineWidth=1.75;
 ls = 0;
 t = true; // true=linegraph false=filledgraph
 d = 7; // sesitivity
-function updateFancyGraphs(e) {
+function updateFancyGraphsOld(e) {
 	var rot = e.rotationRate;
 	var acc = e.acceleration || e.accelerationIncludingGravity;
 	var gh = canvas.height;
@@ -54,6 +54,30 @@ function updateFancyGraphs(e) {
 		b = rot.beta,
 		c = rot.gamma;
 	drawGraph(3 * (a + b + c), "Lime");
+}
+
+			ctx.strokeStyle = "Lime";
+			ctx.fillStyle = "black";
+
+function updateFancyGraphs(e) {
+	var rot = e.rotationRate;
+	var gh = canvas.height;
+	var gh2 = gh / 2;
+
+	ctx.drawImage(canvas, -1, 0);
+
+	//  ctx.fillRect(graphX, 0, 2, canvas.height);
+	ctx.fillRect(graphX, 0, 1, canvas.height);
+
+		var size = Math.max(-gh, Math.min( (3 * (rot.alpha + rot.beta + rot.gamma)) * d, gh));
+		
+			ctx.beginPath();
+			ctx.moveTo(graphX - 1, gh2 + ls / 2);
+			ctx.lineTo(graphX, gh2 + size / 2);
+			ctx.stroke();
+			ls = size;
+		
+
 }
 //
 function resizeCanvas() {
