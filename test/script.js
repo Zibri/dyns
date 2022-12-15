@@ -69,7 +69,9 @@ window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 //
 function gofs(e) {
-	!(document.fullscreenElement == null) && (t = !t) || (
+	if (document.fullscreenElement != null) {
+		(t = !t)
+	} else {
 		canvas.requestFullscreen();
 		const requestWakeLock = async () => {
 			try {
@@ -81,7 +83,7 @@ function gofs(e) {
 			}
 		}
 		requestWakeLock();
-	)
+	}
 }
 
 function firstClick(e) {
