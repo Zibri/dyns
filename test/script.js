@@ -20,6 +20,10 @@ var ctx = canvas.getContext("2d");
 //            ctx.fillStyle = "#000000";
 //            ctx.fillRect(0, 0, canvas.width, canvas.height);
 //var graphX = window.innerWidth-1;
+ls = 0;
+t = true;  // true=linegraph false=filledgraph
+d = 7; // sesitivity
+
 function updateFancyGraphs(e) {
 	var rot = e.rotationRate;
 	var acc = e.acceleration || e.accelerationIncludingGravity;
@@ -27,10 +31,20 @@ function updateFancyGraphs(e) {
 	var gh2 = gh / 2;
 
 	function drawGraph(val, color) {
-		if (val == null) val = 0;
-		var size = Math.max(-gh, Math.min(val * 10, gh));
-		ctx.fillStyle = color;
-		ctx.fillRect(graphX, gh2, 1, size / 2);
+		if (val == null)
+			val = 0;
+		var size = Math.max(-gh, Math.min(val * d, gh));
+		if (!t) {
+			ctx.fillStyle = color;
+			ctx.fillRect(graphX, gh2, 1, size / 2);
+		} else {
+			ctx.strokeStyle = color;
+			ctx.beginPath();
+			ctx.moveTo(graphX - 1, gh2 + ls);
+			ctx.lineTo(graphX, gh2 + size / 2);
+			ctx.stroke();
+			ls = size / 2;
+		}
 	}
 	ctx.drawImage(canvas, -1, 0);
 	ctx.fillStyle = "black";
@@ -40,10 +54,6 @@ function updateFancyGraphs(e) {
 		b = rot.beta,
 		c = rot.gamma;
 	drawGraph(3 * (a + b + c), "Lime");
-	//  drawGraph(acc.z*2, 3, "blue");
-	//  drawGraph(acc.x*2, 4, "lime");
-	//  drawGraph(acc.y*2, 5, "aqua");
-	//  graphX = (graphX + 1) % canvas.width;
 }
 //
 function resizeCanvas() {
