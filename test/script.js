@@ -17,6 +17,7 @@ function requestDeviceMotion(callback) {
 //
 var canvas = document.getElementById("dm_graphs");
 var ctx = canvas.getContext("2d");
+ctx.lineWidth=1.75;
 //            ctx.fillStyle = "#000000";
 //            ctx.fillRect(0, 0, canvas.width, canvas.height);
 //var graphX = window.innerWidth-1;
