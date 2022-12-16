@@ -17,7 +17,7 @@ function requestDeviceMotion(callback) {
 //
 var canvas = document.getElementById("dm_graphs");
 canvas.addEventListener('touchend', async function(e) {
-	if (e.touches.length > 1) {
+	if (e.target.tt > 1) {
 		const blob = await (await fetch(canvas.toDataURL('image/png'))).blob();
 		const filesArray = [
 			new File(
@@ -33,6 +33,10 @@ canvas.addEventListener('touchend', async function(e) {
 		};
 		navigator.share(shareData);
 	}
+});
+
+canvas.addEventListener('touchstart', async function(e) {
+	e.target.tt=e.touches.length;
 });
 var ctx = canvas.getContext("2d");
 //            ctx.fillStyle = "#000000";
