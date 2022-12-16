@@ -40,7 +40,7 @@ var ctx = canvas.getContext("2d");
 //var graphX = window.innerWidth-1;
 ls = 0;
 t = true; // true=linegraph false=filledgraph
-d = 10; // sesitivity
+d = 5; // sesitivity
 function updateFancyGraphsOld(e) {
 	var rot = e.rotationRate;
 	var acc = e.acceleration || e.accelerationIncludingGravity;
