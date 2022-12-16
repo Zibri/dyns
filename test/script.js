@@ -16,7 +16,7 @@ function requestDeviceMotion(callback) {
 }
 //
 var canvas = document.getElementById("dm_graphs");
-canvas.addEventListener('touchstart', async function(e) {
+canvas.addEventListener('touchend', async function(e) {
 	if (e.touches.length > 1) {
 		const blob = await (await fetch(canvas.toDataURL('image/png'))).blob();
 		const filesArray = [
