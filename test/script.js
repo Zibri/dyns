@@ -100,7 +100,7 @@ function resizeCanvas() {
 	canvas.width = w / 1.5;
 	canvas.height = window.innerHeight / 1.5;
 	graphX = canvas.width - 1;
-	ctx.lineWidth = 1.6; // 1.75 is nicer lookign but loses a lot of information.
+	ctx.lineWidth = 1.3; // 1.75 is nicer lookign but loses a lot of information.
 	ctx.strokeStyle = "Lime";
 	ctx.fillStyle = "black";
 }
