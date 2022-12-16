@@ -44,7 +44,7 @@ var ctx = canvas.getContext("2d");
 //var graphX = window.innerWidth-1;
 ls = 0;
 t = true; // true=linegraph false=filledgraph
-d = 5; // sesitivity
+d = 7; // sesitivity
 function updateFancyGraphsOld(e) {
 	var rot = e.rotationRate;
 	var acc = e.acceleration || e.accelerationIncludingGravity;
@@ -100,7 +100,7 @@ function resizeCanvas() {
 	canvas.width = w / 1.5;
 	canvas.height = window.innerHeight / 1.5;
 	graphX = canvas.width - 1;
-	ctx.lineWidth = 1; // 1.75 is nicer lookign but loses a lot of information.
+	ctx.lineWidth = 1.6; // 1.75 is nicer lookign but loses a lot of information.
 	ctx.strokeStyle = "Lime";
 	ctx.fillStyle = "black";
 }
