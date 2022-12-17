@@ -1,6 +1,3 @@
-(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-'use strict';
-
 function FFT(size) {
   this.size = size | 0;
   if (this.size <= 1 || (this.size & (this.size - 1)) !== 0)
@@ -41,7 +38,7 @@ function FFT(size) {
   this._data = null;
   this._inv = 0;
 }
-module.exports = FFT;
+
 
 FFT.prototype.fromComplexArray = function fromComplexArray(complex, storage) {
   var res = storage || new Array(complex.length >>> 1);
@@ -506,5 +503,3 @@ FFT.prototype._singleRealTransform4 = function _singleRealTransform4(outOff,
   out[outOff + 6] = FDr;
   out[outOff + 7] = FDi;
 };
-
-},{}]},{},[1]);
