@@ -77,14 +77,23 @@ function updateFancyGraphsOld(e) {
 	drawGraph(3 * (a + b + c), "Lime");
 }
 
+mdata=Array(512).fill(0);
+mc=0;
 function updateFancyGraphs(e) {
 	var rot = e.rotationRate;
 	var gh = canvas.height;
 	var gh2 = gh / 2;
+	var v = rot.alpha + rot.beta + rot.gamma;
+	mdata=mdata.slice(1);mdata[511]=v;
+	mc+=1;
+    if(mc==512) {
+        mc=0;
+        console.log(mdata); // this fires every 3600/512 = 7.03125 seconds
+    }
 	ctx.drawImage(canvas, -1, 0);
 	//  ctx.fillRect(graphX, 0, 2, canvas.height);
 	ctx.fillRect(graphX, 0, 1, canvas.height);
-	var size = Math.max(-gh, Math.min((3 * (rot.alpha + rot.beta + rot.gamma)) * d, gh));
+	var size = Math.max(-gh, Math.min((3 * (v)) * d, gh));
 	ctx.beginPath();
 	ctx.moveTo(graphX - 1, gh2 + ls / 2);
 	ctx.lineTo(graphX, gh2 + size / 2);
