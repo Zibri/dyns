@@ -1,34 +1,47 @@
-<html><head>
+<html>
+
+<head>
 	<title>HTML5 rotation graph</title>
 	<meta name="viewport" content="width=device-width">
 	<style>
-body {
-  min-height: 100ev;
-}
-    body,html,canvas {
-		font: 15px sans-serif;
-		height: 100hv;
-    width: 100%;
-		margin: 0;
-		padding: 0;
-		background: #113355;
-		color: white;
-		overflow: hidden;
-	}
-	#dm_status, footer {
-		text-align: center;
-	}
-	#dm_graphs {
-		image-rendering: optimizeSpeed;
-		image-rendering: pixelated;
-		background: rgba(0, 0, 0, 0.7);
-	}
-	</style>
-</head><body>
-	<div id="dm_status" hidden>Please tap somewhere?</div>
-  <div id='fs'>
-	<canvas id="dm_graphs" ></canvas>
-  </div>
-  <script  src="./script.js"></script>
-</body></html>
+		body {
+			min-height: 100ev;
+		}
 
+		body,
+		html,
+		canvas {
+			font: 15px sans-serif;
+			height: 100hv;
+			width: 100%;
+			margin: 0;
+			padding: 0;
+			background: #113355;
+			color: white;
+			overflow: hidden;
+		}
+
+		#dm_status,
+		footer {
+			text-align: center;
+		}
+
+		#dm_graphs {
+			image-rendering: optimizeSpeed;
+			image-rendering: pixelated;
+			background: rgba(0, 0, 0, 0.7);
+		}
+	</style>
+	<script src="./zfft.min.js"></script>
+
+</head>
+
+<body>
+	<div id="dm_status" hidden>Please tap somewhere?</div>
+	<div id='fs'>
+		<canvas id="dm_graphs"></canvas>
+	</div>
+	<script src="./script.js"></script>
+</body>
+
+</html>
