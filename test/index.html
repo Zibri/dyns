@@ -5,31 +5,45 @@
 	<meta name="viewport" content="width=device-width">
 	<style>
 		body {
-			min-height: 100ev;
+			min-height: 100ev
 		}
 
 		body,
-		html,
-		canvas {
+		canvas,
+		html {
 			font: 15px sans-serif;
 			height: 100hv;
 			width: 100%;
 			margin: 0;
 			padding: 0;
-			background: #113355;
-			color: white;
-			overflow: hidden;
+			background: #135;
+			color: #fff;
+			overflow: hidden
+		}
+
+		#fs {
+			position: relative
+		}
+
+		#txt,
+		canvas {
+			position: absolute
+		}
+
+		#txt {
+			color: #0f0;
+			margin: 50px;
+			font: 24px subpixel-antialiased sans-serif
 		}
 
 		#dm_status,
 		footer {
-			text-align: center;
+			text-align: center
 		}
 
 		#dm_graphs {
-			image-rendering: optimizeSpeed;
 			image-rendering: pixelated;
-			background: rgba(0, 0, 0, 0.7);
+			background: rgba(0, 0, 0, .7)
 		}
 	</style>
 	<script src="./zfft.min.js"></script>
@@ -37,11 +51,14 @@
 </head>
 
 <body>
-	<div id="dm_status" hidden>Please tap somewhere?</div>
-	<div id='fs'>
-		<canvas id="dm_graphs"></canvas>
+	<div id="dm_status" hidden></div>
+	<div id="fs">
+		<canvas id="dm_graphs" width="1280" height="631"></canvas>
+		<div id="txt"></div>
+
 	</div>
 	<script src="./script.js"></script>
+
 </body>
 
 </html>
