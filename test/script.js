@@ -77,6 +77,7 @@ function updateFancyGraphsOld(e) {
 	drawGraph(3 * (a + b + c), "Lime");
 }
 
+mc=0;
 mdata = Array(128).fill(0);
 fdata = Array(16).fill(0);
 var samples = mdata.length;
