@@ -160,7 +160,7 @@ function firstClick(e) {
 			if (!navigator.userAgentData.mobile) {
 				z = setInterval(() => updateFancyGraphs({
 					"rotationRate": {
-						"alpha": 4*(Math.sin(xx/4.8)+Math.sin(xx/4.4)),
+						"alpha": 4*(Math.sin(xx/4.8)),
 						"beta": 0,
 						"gamma": (xx++)&0
 					}
