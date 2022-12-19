@@ -77,30 +77,35 @@ function updateFancyGraphsOld(e) {
 	drawGraph(3 * (a + b + c), "Lime");
 }
 
-mdata=Array(512).fill(0);
-mc=0;
+mdata = Array(256).fill(0);
+mc = 0;
 function updateFancyGraphs(e) {
-	var rot = e.rotationRate;
-	var gh = canvas.height;
-	var gh2 = gh / 2;
-	var v = rot.alpha + rot.beta + rot.gamma;
-	mdata=mdata.slice(1);mdata[511]=v;
-	mc+=1;
-    if(mc==512) {
-        mc=0;
-        console.log(mdata); // this fires every 3600/512 = 7.03125 seconds
+    var rot = e.rotationRate;
+    var gh = canvas.height;
+    var gh2 = gh / 2;
+    var v = rot.alpha + rot.beta + rot.gamma;
+    mdata = mdata.slice(1);
+    mdata[255] = v;
+    mc += 1;
+    if (mc == 256) {
+        mc = 0;
+        fft = new FFT(mdata.length,60);
+        fft.forward(mdata);
+        freqs = [].slice.call(fft.spectrum);
+        mfreq = freqs.indexOf(Math.max(...freqs)) * (60 / 2 / 128);
+        console.log((Math.round((0.01 + mfreq + (60 / 4 / 128)) * 100) / 100) + " Hz");
     }
-	ctx.drawImage(canvas, -1, 0);
-	//  ctx.fillRect(graphX, 0, 2, canvas.height);
-	ctx.fillRect(graphX, 0, 1, canvas.height);
-	var size = Math.max(-gh, Math.min((3 * (v)) * d, gh));
-	ctx.beginPath();
-	ctx.moveTo(graphX - 1, gh2 + ls / 2);
-	ctx.lineTo(graphX, gh2 + size / 2);
-	ctx.stroke();
-	ls = size;
+    ctx.drawImage(canvas, -1, 0);
+    //  ctx.fillRect(graphX, 0, 2, canvas.height);
+    ctx.fillRect(graphX, 0, 1, canvas.height);
+    var size = Math.max(-gh, Math.min((3 * (v)) * d, gh));
+    ctx.beginPath();
+    ctx.moveTo(graphX - 1, gh2 + ls / 2);
+    ctx.lineTo(graphX, gh2 + size / 2);
+    ctx.stroke();
+    ls = size;
 }
-//
+
 function resizeCanvas() {
 	var status = document.getElementById("dm_status");
 	status.innerText = window.innerWidth + "x" + window.innerHeight;
@@ -114,9 +119,9 @@ function resizeCanvas() {
 	ctx.fillStyle = "black";
 }
 window.addEventListener("resize", resizeCanvas);
-//window.addEventListener("deviceorientation", resizeCanvas);
+
 resizeCanvas();
-//
+
 function gofs(e) {
 	if (document.fullscreenElement != null) {
 		if (t) {
@@ -126,7 +131,7 @@ function gofs(e) {
 		}
 		(t = !t)
 	} else {
-		canvas.requestFullscreen();
+		document.getElementById('fs').requestFullscreen();
 		const requestWakeLock = async () => {
 			try {
 				const wakeLock = await navigator.wakeLock.request('screen');
@@ -151,12 +156,13 @@ function firstClick(e) {
 			window.addEventListener("devicemotion", updateFancyGraphs);
 			el = document.querySelector('#fs');
 			el.addEventListener("click", gofs);
+                        var xx=0;
 			if (!navigator.userAgentData.mobile) {
 				z = setInterval(() => updateFancyGraphs({
 					"rotationRate": {
-						"alpha": 7.5 - Math.random() * 15,
-						"beta": 7.5 - Math.random() * 15,
-						"gamma": 7.5 - Math.random() * 15
+						"alpha": 4*(Math.sin(xx/4.8)+Math.sin(xx/4.4)),
+						"beta": 0,
+						"gamma": (xx++)&0
 					}
 				}), 20)
 			}
