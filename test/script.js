@@ -81,6 +81,7 @@ mc=0;
 mdata = Array(128).fill(0);
 fdata = Array(16).fill(0);
 var samples = mdata.length;
+txt=document.getElementById('txt');
 function updateFancyGraphs(e) {
     var rot = e.rotationRate;
     var gh = canvas.height;
@@ -100,8 +101,19 @@ function updateFancyGraphs(e) {
         //console.log(mfreq);
     fdata = fdata.slice(1);
     fdata[15] = mfreq;
-        avg=fdata.reduce((a, b) => a + b) / fdata.reduce((a,b)=>a+=b!=0);
-    console.log("average:",avg);
+    avg=fdata.reduce((a, c) => {
+  if (c !== 0) {
+    a.count++;
+    a.sum += c;
+    a.avg = a.sum/a.count;
+  }
+  
+  return a;
+}, {count: 0, sum: 0, avg: 0}).avg;
+	    
+//        avg=fdata.reduce((a, b) => a + b) / fdata.reduce((a,b)=>a+=b!=0);
+    //console.log("average:",Math.round(avg*100)/100);
+    txt.innerText="Frequency:"+Math.round(avg*100)/100+" Hz.";
 
     }
     //v=avg;
