@@ -77,31 +77,39 @@ function updateFancyGraphsOld(e) {
 	drawGraph(3 * (a + b + c), "Lime");
 }
 
-mdata = Array(256).fill(0);
-mc = 0;
+mdata = Array(128).fill(0);
+fdata = Array(16).fill(0);
+var samples = mdata.length;
 function updateFancyGraphs(e) {
     var rot = e.rotationRate;
     var gh = canvas.height;
     var gh2 = gh / 2;
     var v = rot.alpha + rot.beta + rot.gamma;
     mdata = mdata.slice(1);
-    mdata[255] = v;
+    mdata[samples - 1] = v;
     mc += 1;
-    if (mc == 256) {
+    if (mc == samples) {
         mc = 0;
         fft = new FFT(mdata.length,60);
         fft.forward(mdata);
         freqs = [].slice.call(fft.spectrum);
-        mfreq = freqs.indexOf(Math.max(...freqs)) * (60 / 2 / 128);
-        console.log((Math.round((0.01 + mfreq + (60 / 4 / 128)) * 100) / 100) + " Hz");
+        freqs[0] = 0;
+        mfreq = freqs.indexOf(Math.max(...freqs)) * (60 / 2 / (samples/2));
+        mfreq = Math.round(mfreq+(30/samples));
+        //console.log(mfreq);
+    fdata = fdata.slice(1);
+    fdata[15] = mfreq;
+        avg=fdata.reduce((a, b) => a + b) / fdata.reduce((a,b)=>a+=b!=0);
+    console.log("average:",avg);
+
     }
+    //v=avg;
     ctx.drawImage(canvas, -1, 0);
-    //  ctx.fillRect(graphX, 0, 2, canvas.height);
     ctx.fillRect(graphX, 0, 1, canvas.height);
     var size = Math.max(-gh, Math.min((3 * (v)) * d, gh));
     ctx.beginPath();
-    ctx.moveTo(graphX - 1, gh2 + ls / 2);
-    ctx.lineTo(graphX, gh2 + size / 2);
+    ctx.moveTo(graphX - 0.5, gh2 + ls / 2);
+    ctx.lineTo(graphX + 0.5, gh2 + size / 2);
     ctx.stroke();
     ls = size;
 }
