@@ -75,57 +75,59 @@ function updateFancyGraphsOld(e) {
 		c = rot.gamma;
 	drawGraph(3 * (a + b + c), "Lime");
 }
+
 mc = 0;
-mdata = Array(128).fill(0);
+mdata = Array(512).fill(0);
 fdata = Array(4).fill(0);
 var samples = mdata.length;
 txt = document.getElementById('txt');
 
 function updateFancyGraphs(e) {
-	var rot = e.rotationRate;
-	var gh = canvas.height;
-	var gh2 = gh / 2;
-	var v = rot.alpha + rot.beta + rot.gamma;
-	mdata = mdata.slice(1);
-	mdata[samples - 1] = v;
-	mc += 1;
-	if (mc == samples) {
-		mc = 0;
-		fft = new FFT(mdata.length, 60);
-		fft.forward(mdata);
-		freqs = [].slice.call(fft.spectrum);
-		freqs[0] = 0;
-		mfreq = freqs.indexOf(Math.max(...freqs)) * (60 / 2 / (samples / 2));
-		mfreq = mfreq + (30 / samples);
-		//console.log(mfreq);
-		fdata = fdata.slice(1);
-		fdata[15] = mfreq;
-		avg = fdata.reduce((a, c) => {
-			if (c !== 0) {
-				a.count++;
-				a.sum += c;
-				a.avg = a.sum / a.count;
-			}
-			return a;
-		}, {
-			count: 0,
-			sum: 0,
-			avg: 0
-		}).avg;
-		//        avg=fdata.reduce((a, b) => a + b) / fdata.reduce((a,b)=>a+=b!=0);
-		//console.log("average:",Math.round(avg*100)/100);
-		txt.innerText = "AVG Frequency: " + Math.round(avg * 100) / 100 + " Hz.";
-                txt.innerText = "\n\nRT Frequency: " + Math.round(mfreq * 100) / 100 + " Hz.";
-	}
-	//v=avg;
-	ctx.drawImage(canvas, -1, 0);
-	ctx.fillRect(graphX, 0, 1, canvas.height);
-	var size = Math.max(-gh, Math.min((3 * (v)) * d, gh));
-	ctx.beginPath();
-	ctx.moveTo(graphX - 0.5, gh2 + ls / 2);
-	ctx.lineTo(graphX + 0.5, gh2 + size / 2);
-	ctx.stroke();
-	ls = size;
+    var rot = e.rotationRate;
+    var gh = canvas.height;
+    var gh2 = gh / 2;
+    var v = rot.alpha + rot.beta + rot.gamma;
+    mdata = mdata.slice(1);
+    mdata[samples - 1] = v;
+    mc += 1;
+    if (mc == samples) {
+        mc = 0;
+        fft = new FFT(mdata.length,60);
+        fft.forward(mdata);
+        freqs = [].slice.call(fft.spectrum);
+        freqs[0] = 0;
+        mfreq = freqs.indexOf(Math.max(...freqs)) * (60 / 2 / (samples / 2));
+        mfreq = mfreq + (30 / samples);
+        console.log(mdata);
+        fdata = fdata.slice(1);
+        fdata[15] = mfreq;
+        avg = fdata.reduce((a,c)=>{
+            if (c !== 0) {
+                a.count++;
+                a.sum += c;
+                a.avg = a.sum / a.count;
+            }
+            return a;
+        }
+        , {
+            count: 0,
+            sum: 0,
+            avg: 0
+        }).avg;
+        //        avg=fdata.reduce((a, b) => a + b) / fdata.reduce((a,b)=>a+=b!=0);
+        //console.log("average:",Math.round(avg*100)/100);
+        txt.innerText = "AVG Frequency: " + Math.round(avg * 100) / 100 + " Hz.";
+        txt.innerText += "\nRT Frequency: " + Math.round(mfreq * 100) / 100 + " Hz.";
+    }
+    //v=avg;
+    ctx.drawImage(canvas, -1, 0);
+    ctx.fillRect(graphX, 0, 1, canvas.height);
+    var size = Math.max(-gh, Math.min((3 * (v)) * d, gh));
+    ctx.beginPath();
+    ctx.moveTo(graphX - 0.5, gh2 + ls / 2);
+    ctx.lineTo(graphX + 0.5, gh2 + size / 2);
+    ctx.stroke();
+    ls = size;
 }
 
 function resizeCanvas() {
