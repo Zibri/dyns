@@ -77,7 +77,7 @@ function updateFancyGraphsOld(e) {
 }
 mc = 0;
 mdata = Array(128).fill(0);
-fdata = Array(16).fill(0);
+fdata = Array(4).fill(0);
 var samples = mdata.length;
 txt = document.getElementById('txt');
 
@@ -96,7 +96,7 @@ function updateFancyGraphs(e) {
 		freqs = [].slice.call(fft.spectrum);
 		freqs[0] = 0;
 		mfreq = freqs.indexOf(Math.max(...freqs)) * (60 / 2 / (samples / 2));
-		mfreq = Math.round(mfreq + (30 / samples));
+		mfreq = mfreq + (30 / samples);
 		//console.log(mfreq);
 		fdata = fdata.slice(1);
 		fdata[15] = mfreq;
@@ -114,7 +114,8 @@ function updateFancyGraphs(e) {
 		}).avg;
 		//        avg=fdata.reduce((a, b) => a + b) / fdata.reduce((a,b)=>a+=b!=0);
 		//console.log("average:",Math.round(avg*100)/100);
-		txt.innerText = "Frequency: " + Math.round(avg * 100) / 100 + " Hz.";
+		txt.innerText = "AVG Frequency: " + Math.round(avg * 100) / 100 + " Hz.";
+                txt.innerText = "\n\nRT Frequency: " + Math.round(mfreq * 100) / 100 + " Hz.";
 	}
 	//v=avg;
 	ctx.drawImage(canvas, -1, 0);
@@ -176,15 +177,17 @@ function firstClick(e) {
 			window.addEventListener("devicemotion", updateFancyGraphs);
 			el = document.querySelector('#fs');
 			el.addEventListener("click", gofs);
-			var xx = 0;
 			if (!navigator.userAgentData.mobile) {
-				z = setInterval(() => updateFancyGraphs({
-					"rotationRate": {
-						"alpha": 4 * (Math.sin(xx / 4.8)),
-						"beta": 0,
-						"gamma": (xx++) & 0
-					}
-				}), 20)
+				var xx = 0;
+				z = setInterval(() => {
+					updateFancyGraphs({
+						"rotationRate": {
+							"alpha": 4 * Math.sin((xx / 60 * 2 * Math.PI)),
+							"beta": 0,
+							"gamma": (xx++) & 0
+						}
+					});
+				}, 1000 / 60)
 			}
 		} else if (e) {
 			status.innerText = "" + err;
