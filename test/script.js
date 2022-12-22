@@ -134,6 +134,7 @@ function updateFancyGraphs(e) {
     }
 
     //v=avg;
+    v=10*v/Math.max(...mdata.slice(392));
     ctx.drawImage(canvas, -1, 0);
     ctx.fillRect(graphX, 0, 1, canvas.height);
     var size = Math.max(-gh, Math.min((3 * (v)) * d, gh));
