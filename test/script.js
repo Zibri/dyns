@@ -44,6 +44,15 @@ var ctx = canvas.getContext("2d");
 ls = 0;
 t = true; // true=linegraph false=filledgraph
 d = 7; // sesitivity
+
+mc = 0;
+lbpm = "";
+mdata = Array(512).fill(0);
+fdata = Array(4).fill(0);
+var samples = mdata.length;
+txt = document.getElementById('txt');
+adata = Array(samples).fill(0);
+
 function updateFancyGraphs(e) {
     var rot = e.rotationRate;
     var gh = canvas.height;
