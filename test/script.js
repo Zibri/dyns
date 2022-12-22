@@ -82,6 +82,7 @@ mdata = Array(512).fill(0);
 fdata = Array(4).fill(0);
 var samples = mdata.length;
 txt = document.getElementById('txt');
+adata = Array(512).fill(0);
 
 function updateFancyGraphs(e) {
     var rot = e.rotationRate;
@@ -119,7 +120,7 @@ function updateFancyGraphs(e) {
         //console.log("average:",Math.round(avg*100)/100);
         txt.innerText = "AVG Frequency: " + Math.round(avg * 100) / 100 + " Hz.";
         txt.innerText += "\nRT Frequency: " + Math.round(mfreq * 100) / 100 + " Hz.";
-        bpms=mdata.slice(152).map((a,b,c)=>(a>0)?c[b]**4 * c[b-1]**3 :-20).map((a,b,c)=>a>Math.max(...c.slice(2))/20).map((a,b,c)=>(b>10) && c.slice(b-10,b).indexOf(a)==-1 ).reduce((a,c)=>{
+        bpms=adata.slice(152).map((a,b,c)=>(a>0)?c[b]**4 * c[b-1]**3 :-20).map((a,b,c)=>a>Math.max(...c.slice(2))/20).map((a,b,c)=>(b>10) && c.slice(b-10,b).indexOf(a)==-1 ).reduce((a,c)=>{
             if (c == 0) {
                 a.count++;
             } else {
