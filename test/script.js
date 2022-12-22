@@ -118,7 +118,21 @@ function updateFancyGraphs(e) {
         //console.log("average:",Math.round(avg*100)/100);
         txt.innerText = "AVG Frequency: " + Math.round(avg * 100) / 100 + " Hz.";
         txt.innerText += "\nRT Frequency: " + Math.round(mfreq * 100) / 100 + " Hz.";
+        bpms=mdata.slice(152).map((a,b,c)=>(a>0)?c[b]**4 * c[b-1]**3 :-20).map((a,b,c)=>a>Math.max(...c.slice(2))/20).map((a,b,c)=>(b>10) && c.slice(b-10,b).indexOf(a)==-1 ).reduce((a,c)=>{
+            if (c == 0) {
+                a.count++;
+            } else {
+                if (a.count > a.max) a.max=a.count;
+                a.p.push(a.count);
+                a.count=0;
+            }
+            return a;
+        }
+        , {count: 0, max:0, p: []}).p.map(a=>Math.round(36000/a)/10).slice(1);
+        if (typeof bpms[0]=='undefined') bpms[0]='';
+        txt.innerText += "\nBPM: "+bpms[0];
     }
+
     //v=avg;
     ctx.drawImage(canvas, -1, 0);
     ctx.fillRect(graphX, 0, 1, canvas.height);
