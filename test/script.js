@@ -44,46 +44,6 @@ var ctx = canvas.getContext("2d");
 ls = 0;
 t = true; // true=linegraph false=filledgraph
 d = 7; // sesitivity
-function updateFancyGraphsOld(e) {
-	var rot = e.rotationRate;
-	var acc = e.acceleration || e.accelerationIncludingGravity;
-	var gh = canvas.height;
-	var gh2 = gh / 2;
-
-	function drawGraph(val, color) {
-		if (val == null)
-			val = 0;
-		var size = Math.max(-gh, Math.min(val * d, gh));
-		if (!t) {
-			ctx.fillStyle = color;
-			ctx.fillRect(graphX, gh2, 1, size / 2);
-		} else {
-			ctx.strokeStyle = color;
-			ctx.beginPath();
-			ctx.moveTo(graphX - 1, gh2 + ls);
-			ctx.lineTo(graphX, gh2 + size / 2);
-			ctx.stroke();
-			ls = size / 2;
-		}
-	}
-	ctx.drawImage(canvas, -1, 0);
-	ctx.fillStyle = "black";
-	//  ctx.fillRect(graphX, 0, 2, canvas.height);
-	ctx.fillRect(graphX, 0, 1, canvas.height);
-	var a = rot.alpha,
-		b = rot.beta,
-		c = rot.gamma;
-	drawGraph(3 * (a + b + c), "Lime");
-}
-
-mc = 0;
-lbpm = "";
-mdata = Array(512).fill(0);
-fdata = Array(4).fill(0);
-var samples = mdata.length;
-txt = document.getElementById('txt');
-adata = Array(512).fill(0);
-
 function updateFancyGraphs(e) {
     var rot = e.rotationRate;
     var gh = canvas.height;
@@ -138,6 +98,8 @@ function updateFancyGraphs(e) {
 
     //v=avg;
     v=10*v/Math.max(...mdata.slice(392));
+    adata=adata.slice(1);
+    adata[samples-1]=v;
     ctx.drawImage(canvas, -1, 0);
     ctx.fillRect(graphX, 0, 1, canvas.height);
     var size = Math.max(-gh, Math.min((3 * (v)) * d, gh));
