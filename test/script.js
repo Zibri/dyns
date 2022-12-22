@@ -77,6 +77,7 @@ function updateFancyGraphsOld(e) {
 }
 
 mc = 0;
+lbpm = "";
 mdata = Array(512).fill(0);
 fdata = Array(4).fill(0);
 var samples = mdata.length;
@@ -129,8 +130,9 @@ function updateFancyGraphs(e) {
             return a;
         }
         , {count: 0, max:0, p: []}).p.map(a=>Math.round(36000/a)/10).slice(1);
-        if (typeof bpms[0]=='undefined') bpms[0]='';
-        txt.innerText += "\nBPM: "+bpms[0];
+        if (typeof bpms[0]=='undefined') {bpms[0]=lbpm}else lbpm=bpms[0];
+
+        txt.innerText += "\nBPM: "+lbpm;
     }
 
     //v=avg;
