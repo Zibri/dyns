@@ -87,9 +87,10 @@ function updateFancyGraphs(e) {
         }).avg;
         //        avg=fdata.reduce((a, b) => a + b) / fdata.reduce((a,b)=>a+=b!=0);
         //console.log("average:",Math.round(avg*100)/100);
-        txt.innerText = "AVG Frequency: " + Math.round(avg * 100) / 100 + " Hz.";
-        txt.innerText += "\nRT Frequency: " + Math.round(mfreq * 100) / 100 + " Hz.";
-        bpms=adata.slice(152).map((a,b,c)=>(a>0)?c[b]**4 * c[b-1]**3 :-20).map((a,b,c)=>a>Math.max(...c.slice(2))/20).map((a,b,c)=>(b>10) && c.slice(b-10,b).indexOf(a)==-1 ).reduce((a,c)=>{
+    }
+
+if (mc%60==0) {
+        bpms=adata.slice(152).map((a,b,c)=>a>=Math.max(...c.slice(b-15,b))?a**3:0).map((a,b,c)=>a>Math.max(...c.slice(2))/4).map((a,b,c)=>(b>15) && c.slice(b-14,b).indexOf(a)==-1 ).reduce((a,c)=>{
             if (c == 0) {
                 a.count++;
             } else {
@@ -102,9 +103,10 @@ function updateFancyGraphs(e) {
         , {count: 0, max:0, p: []}).p.map(a=>Math.round(36000/a)/10).slice(1);
         if (typeof bpms[0]=='undefined') {bpms[0]=lbpm}else lbpm=bpms[0];
 
+        txt.innerText = "AVG Frequency: " + Math.round(avg * 100) / 100 + " Hz.";
+        txt.innerText += "\nRT Frequency: " + Math.round(mfreq * 100) / 100 + " Hz.";
         txt.innerText += "\nBPM: "+lbpm;
-    }
-
+}
     //v=avg;
     v=10*v/Math.max(...mdata.slice(392));
     adata=adata.slice(1);
