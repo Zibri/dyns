@@ -43,7 +43,8 @@ var ctx = canvas.getContext("2d");
 //var graphX = window.innerWidth-1;
 ls = 0;
 t = true; // true=linegraph false=filledgraph
-d = 7; // sesitivity
+//d = 7; // sesitivity
+d=canvas.height/40;
 
 mc = 0;
 lbpm = "";
