@@ -111,7 +111,7 @@ if (mc%60==0) {
         txt.innerText += "\nSA: "+sv;
 }
     //v=avg;
-    //v=10*v/Math.max(...mdata.slice(samples-128));
+    v=10*v/Math.max(...mdata.slice(samples-128));
     adata=adata.slice(1);
     adata[samples-1]=v;
     ctx.drawImage(canvas, -1, 0);
