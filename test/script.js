@@ -43,10 +43,10 @@ var ctx = canvas.getContext("2d");
 //var graphX = window.innerWidth-1;
 ls = 0;
 t = true; // true=linegraph false=filledgraph
-//d = 7; // sesitivity
-d=canvas.height/40;
+d = 7; // sesitivity
 
 mc = 0;
+sv=0;
 lbpm = "";
 mdata = Array(512).fill(0);
 fdata = Array(4).fill(0);
@@ -73,6 +73,7 @@ function updateFancyGraphs(e) {
         console.log(mdata);
         fdata = fdata.slice(1);
         fdata[15] = mfreq;
+        sv=fft.spectrum.reduce((a,b,c)=>((c>4)&&(c<17))?a+b:a,0);
         avg = fdata.reduce((a,c)=>{
             if (c !== 0) {
                 a.count++;
@@ -107,6 +108,7 @@ if (mc%60==0) {
         txt.innerText = "AVG Frequency: " + Math.round(avg * 100) / 100 + " Hz.";
         txt.innerText += "\nRT Frequency: " + Math.round(mfreq * 100) / 100 + " Hz.";
         txt.innerText += "\nBPM: "+lbpm;
+        txt.innerText += "\nSA: "+sv;
 }
     //v=avg;
     v=10*v/Math.max(...mdata.slice(392));
