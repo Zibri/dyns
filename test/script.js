@@ -48,7 +48,7 @@ d = 7; // sesitivity
 mc = 0;
 sv=0;
 lbpm = "";
-mdata = Array(512).fill(0);
+mdata = Array(256).fill(0);
 fdata = Array(4).fill(0);
 var samples = mdata.length;
 txt = document.getElementById('txt');
@@ -73,7 +73,7 @@ function updateFancyGraphs(e) {
         console.log(mdata);
         fdata = fdata.slice(1);
         fdata[15] = mfreq;
-        sv=fft.spectrum.reduce((a,b,c)=>((c>4)&&(c<17))?a+b:a,0);
+        sv=Math.floor(10*fft.spectrum.reduce((a,b,c)=>((c>4)&&(c<17))?a+b:a,0))/10;
         avg = fdata.reduce((a,c)=>{
             if (c !== 0) {
                 a.count++;
