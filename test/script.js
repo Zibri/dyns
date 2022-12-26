@@ -46,14 +46,15 @@ t = true; // true=linegraph false=filledgraph
 d = 7; // sesitivity
 
 mc = 0;
-sv=0;
+sv = 0;
+sh = 0;
 lbpm = "";
 mdata = Array(600).fill(0);
 fdata = Array(4).fill(0);
 var samples = mdata.length;
 txt = document.getElementById('txt');
 adata = Array(samples).fill(0);
-fftsize=1 << 31 - Math.clz32(mdata.length);
+fftsize = 1 << 31 - Math.clz32(mdata.length);
 
 function updateFancyGraphs(e) {
     var rot = e.rotationRate;
@@ -63,11 +64,11 @@ function updateFancyGraphs(e) {
     mdata = mdata.slice(1);
     mdata[samples - 1] = v;
     mc += 1;
-    if ((mc%60==0) && (mc >= fftsize)) {
-//        mc = 0;
-        
+    if ((mc % 60 == 0) && (mc >= fftsize)) {
+        //        mc = 0;
+
         fft = new FFT(fftsize,60);
-        fft.forward(mdata.slice(mdata.length-fftsize));
+        fft.forward(mdata.slice(mdata.length - fftsize));
         freqs = [].slice.call(fft.spectrum);
         freqs[0] = 0;
         mfreq = freqs.indexOf(Math.max(...freqs)) * (60 / 2 / (samples / 2));
@@ -75,7 +76,8 @@ function updateFancyGraphs(e) {
         console.log(mdata);
         fdata = fdata.slice(1);
         fdata[15] = mfreq;
-        sv=Math.floor(10*fft.spectrum.reduce((a,b,c)=>((c>4)&&(c<17))?a+b:a,0))/10;
+        sv = Math.floor(10 * fft.spectrum.reduce((a,b,c)=>((c > 4) && (c < 17)) ? a + b : a, 0)) / 10;
+        sh = Math.floor(10 * fft.spectrum.reduce((a,b,c)=>((c > 16) && (c < 29)) ? a + b : a, 0)) / 10;
         avg = fdata.reduce((a,c)=>{
             if (c !== 0) {
                 a.count++;
@@ -91,28 +93,37 @@ function updateFancyGraphs(e) {
         }).avg;
         //        avg=fdata.reduce((a, b) => a + b) / fdata.reduce((a,b)=>a+=b!=0);
         //console.log("average:",Math.round(avg*100)/100);
-        bpms=adata.slice(152).map((a,b,c)=>a>=Math.max(...c.slice(b-15,b))?a**3:0).map((a,b,c)=>a>Math.max(...c.slice(2))/4).map((a,b,c)=>(b>15) && c.slice(b-14,b).indexOf(a)==-1 ).reduce((a,c)=>{
+        bpms = adata.slice(152).map((a,b,c)=>a >= Math.max(...c.slice(b - 15, b)) ? a ** 3 : 0).map((a,b,c)=>a > Math.max(...c.slice(2)) / 4).map((a,b,c)=>(b > 15) && c.slice(b - 14, b).indexOf(a) == -1).reduce((a,c)=>{
             if (c == 0) {
                 a.count++;
             } else {
-                if (a.count > a.max) a.max=a.count;
+                if (a.count > a.max)
+                    a.max = a.count;
                 a.p.push(a.count);
-                a.count=0;
+                a.count = 0;
             }
             return a;
         }
-        , {count: 0, max:0, p: []}).p.map(a=>Math.round(36000/a)/10).slice(1);
-        if (typeof bpms[0]=='undefined') {bpms[0]=lbpm}else lbpm=bpms[0];
+        , {
+            count: 0,
+            max: 0,
+            p: []
+        }).p.map(a=>Math.round(36000 / a) / 10).slice(1);
+        if (typeof bpms[0] == 'undefined') {
+            bpms[0] = lbpm
+        } else
+            lbpm = bpms[0];
 
         txt.innerText = "AVG Frequency: " + Math.round(avg * 100) / 100 + " Hz.";
         txt.innerText += "\nRT Frequency: " + Math.round(mfreq * 100) / 100 + " Hz.";
-        txt.innerText += "\nBPM: "+lbpm;
-        txt.innerText += "\nSA: "+sv;
-}
+        txt.innerText += "\nBPM: " + lbpm;
+        txt.innerText += "\nLF: " + sv;
+        txt.innerText += "\nHF: " + sh;
+    }
     //v=avg;
-    v=10*v/Math.max(...mdata.slice(samples-128));
-    adata=adata.slice(1);
-    adata[samples-1]=v;
+    v = 10 * v / Math.max(...mdata.slice(samples - 128));
+    adata = adata.slice(1);
+    adata[samples - 1] = v;
     ctx.drawImage(canvas, -1, 0);
     ctx.fillRect(graphX, 0, 1, canvas.height);
     var size = Math.max(-gh, Math.min((3 * (v)) * d, gh));
