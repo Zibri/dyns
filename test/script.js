@@ -76,8 +76,8 @@ function updateFancyGraphs(e) {
         console.log(mdata);
         fdata = fdata.slice(1);
         fdata[15] = mfreq;
-        sv = Math.floor(10 * fft.spectrum.reduce((a,b,c)=>((c > 4) && (c < 17)) ? a + b : a, 0)) / 10;
-        sh = Math.floor(10 * fft.spectrum.reduce((a,b,c)=>((c > 16) && (c < 29)) ? a + b : a, 0)) / 10;
+        sv = Math.floor(10 * fft.spectrum.reduce((a,b,c)=>(c < 128) ? a + b : a, 0)) / 10;
+        sh = Math.floor(10 * fft.spectrum.reduce((a,b,c)=>(c > 127) ? a + b : a, 0)) / 10;
         avg = fdata.reduce((a,c)=>{
             if (c !== 0) {
                 a.count++;
