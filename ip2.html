@@ -1,10 +1,12 @@
 <html>
-    <head>
-        <meta name="viewport" content="width = device-width, user-scalable = yes">
-        <meta property="og:title" content="IP">
-        <meta property="og:description" content="Your IP address(es)">
-        <meta property="og:image" content="ip7.png">
-        <meta property="og:image:width" content="603"><meta property="og:image:height content="310"="">
+
+<head>
+	<meta name="viewport" content="width = device-width, user-scalable = yes">
+	<meta property="og:title" content="IP">
+	<meta property="og:description" content="Your IP address(es)">
+	<meta property="og:image" content="ip7.png">
+	<meta property="og:image:width" content="603">
+	<meta property="og:image:height content=" 310"="">
 	<script>
 		function geoip(gip) {
 			window.remip2 = gip.ip;
@@ -34,10 +36,10 @@
 			// Don't do anything if the permission was denied.
 		});
 	</script>
-	<script src="https://get.geojs.io/v1/ip.js "></script>
+	<script src="https://get.geojs.io/v1/ip.js"></script>
 	<style>
 		body {
-			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI ", Helvetica, Arial, sans-serif;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 			line-height: 1.6;
 			color: cyan;
 			max-width: 20rem;
@@ -88,19 +90,19 @@
 	</h1>
 	<br>
 	<h1>
-		<div onclick="this.innterText='Refreshing.';return location.reload()" id="refresh ">Refresh</div>
+		<div onclick="this.innterText='Refreshing.';return location.reload()" id="refresh">Refresh</div>
 	</h1>
-	<textarea id="holdtext " style="display:none;"></textarea>
+	<textarea id="holdtext" style="display:none;"></textarea>
 	<script>
 		function ClipBoard(o) {
-			if (typeof navigator.share != "undefined ") {
+			if (typeof navigator.share != "undefined") {
 				navigator.share({
 					text: o.innerText
 				});
 			} else {
 				navigator.clipboard.writeText(o.innerText);
 				var oldtext = o.innerText;
-				o.innerText = "Copied to clipboard ";
+				o.innerText = "Copied to clipboard";
 				setTimeout(() => o.innerText = oldtext, 800);
 			}
 			return false;
@@ -120,7 +122,7 @@
 					//skip non-candidate events
 					if (ice.candidate) {
 						ip = ice.candidate.address;
-						ip.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/) && ice.candidate.candidate.split("")[7] == "host " ? locip = ip : remip = ip;
+						ip.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/) && ice.candidate.candidate.split(" ")[7] == "host" ? locip = ip : remip = ip;
 					} else {
 						pc.close();
 						c(locip, remip)
@@ -132,7 +134,7 @@
 					pc.setLocalDescription(result, function() {}, function() {});
 				}, function() {});
 			} catch (e) {
-				c("N/A", "N/A ");
+				c("N/A", "N/A");
 			}
 		})(
 			function(locip, remip) {
@@ -152,18 +154,18 @@
 							reject('timeout');
 						})
 						req.x = x;
-						req.open("GET ", 'https://' + locip.replace(/\.[^\.]*$/, '.') + x + ':9876');
+						req.open("GET", 'https://' + locip.replace(/\.[^\.]*$/, '.') + x + ':9876');
 						req.send();
 					}
 				})
 				document.getElementById("lip").innerText = locip;
 				document.getElementById("rip").innerText = remip;
-				if ((locip.length > 15) || (remip.length > 15)) document.body.style["max-width"] = "40rem ";
+				if ((locip.length > 15) || (remip.length > 15)) document.body.style["max-width"] = "40rem";
 				findtv(locip).then((r) => findtv(locip).then((r) => document.getElementById("lgtvip").innerText = locip.replace(/\.[^\.]*$/, '.') + r))
 			}
 		)
 		document.getElementById("rip2").innerText = remip2;
-		if (remip2.length > 15) document.body.style["max-width"] = "40rem ";
+		if (remip2.length > 15) document.body.style["max-width"] = "40rem";
 	</script>
 
 </body>
