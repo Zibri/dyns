@@ -175,6 +175,7 @@
                                     if (!defaultRouterFound) {
                                         results["default router "] = fullIp;
                                         defaultRouterFound = true;
+                                        resolve(results);
                                     } else if (!ownIpFound) {
                                         results["own ip"] = fullIp;
                                         ownIpFound = true;
