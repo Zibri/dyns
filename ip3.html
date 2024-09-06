@@ -1,3 +1,4 @@
+
 <html>
 
 <head>
@@ -36,7 +37,7 @@
             // Don't do anything if the permission was denied.
         });
     </script>
-    <script src="https://get.geojs.io/v1/ip.js "></script>
+    <script src="https://ipv4.geojs.io/v1/ip.js "></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI ", Helvetica, Arial, sans-serif;
@@ -122,13 +123,17 @@
 
                     pc.onicecandidate = ice => {
                         prot = prot || ice.candidate.protocol;
-                        if (ice.candidate && ice.candidate.protocol === prot && ice.candidate.address[0]!=='[') {
+                        if (ice.candidate &&
+                            ice.candidate.protocol === prot &&
+                            ice.candidate.address &&
+                            ice.candidate.address[0] !== '[' &&
+                            ice.candidate.address.indexOf(':') === -1) {
                             ips.push(ice.candidate.address);
                         } else if (!ice.candidate) {
                             pc.close();
                             resolve(ips);
                         }
-                        if(ips.length>=2) {
+                        if (ips.length >= 2) {
                             pc.close();
                             resolve(ips);
                         }
@@ -191,7 +196,7 @@
                 document.getElementById("rip2").innerText = remip2;
                 if (remip2.length > 15) document.body.style["max-width"] = "40rem ";
 
-                findDevices(ips[0],4000).then((r) => {
+                findDevices(ips[0], 4000).then((r) => {
                     console.log("RESULT ", r)
                     document.getElementById("dgwip").innerText = r["default router "];
                 })
