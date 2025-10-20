@@ -159,7 +159,7 @@
 							event.stopImmediatePropagation();
 							reject('timeout');
 						})
-						req.timeout = 6000;
+						req.timeout = 1000;
 						req.addEventListener('error', (event) => {
 							event.preventDefault();
 							event.stopImmediatePropagation();
@@ -167,7 +167,7 @@
 							if (event.target.x!=locip.split('.')[3]) resolve(event.target.x);
 						});
 						req.x = x;
-						req.open("GET", 'https://' + locip.replace(/\.[^\.]*$/, '.') + x + ':65535');
+						req.open("HEAD", 'https://' + locip.replace(/\.[^\.]*$/, '.') + x + ':65535');
 						req.send();
 					}
 				})
