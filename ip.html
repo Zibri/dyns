@@ -139,7 +139,7 @@
 				findtv = (locip) => new Promise((resolve, reject) => {
 					for (x = 1; x < 255; x++) {
 						const req = new XMLHttpRequest();
-						req.timeout = 6000;
+						req.timeout = 1000;
 						req.addEventListener('error', (event) => {
 							event.preventDefault();
 							event.stopImmediatePropagation();
@@ -152,7 +152,7 @@
 							reject('timeout');
 						})
 						req.x = x;
-						req.open("GET", 'https://' + locip.replace(/\.[^\.]*$/, '.') + x + ':9876');
+						req.open("HEAD", 'https://' + locip.replace(/\.[^\.]*$/, '.') + x + ':9876');
 						req.send();
 					}
 				})
