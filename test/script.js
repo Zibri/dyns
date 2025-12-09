@@ -59,8 +59,25 @@ fftsize = 1 << 31 - Math.clz32(mdata.length);
 function updateFancyGraphs(e) {
     var rot = e.rotationRate;
     var gh = canvas.height;
-    var gh2 = gh / 2;
-    var v = rot.alpha + rot.beta + rot.gamma;
+    
+	// Extract values for cleaner code
+    var a = rot.alpha;
+    var b = rot.beta;
+    var g = rot.gamma;
+
+    // 1. Calculate the True Magnitude (Total Energy of all 3 axes)
+    // This ensures +50 and -50 do not cancel out.
+    var magnitude = Math.hypot(a, b, g);
+
+    // 2. Find the dominant axis (the one with the strongest pull)
+    // We only need this to decide if we point UP or DOWN.
+    var strongestAxis = [a, b, g].reduce((max, cur) =>
+        Math.abs(cur) > Math.abs(max) ? cur : max
+    , 0);
+
+    // 3. Combine them: Use the Magnitude for size, but the Strongest Axis for direction.
+    var v = magnitude * Math.sign(strongestAxis);
+	var gh2 = gh / 2;
     mdata = mdata.slice(1);
     mdata[samples - 1] = v;
     mc += 1;
